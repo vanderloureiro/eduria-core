@@ -27,5 +27,6 @@ public class Enrollment {
 
     private int level;
 
+    @Column(name = "content_order")
     private int contentOrder;
 }
