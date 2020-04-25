@@ -23,7 +23,7 @@ public class Course {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="course_id")
-    private String courseId;
+    private Long courseId;
 
     @ManyToOne
     @JoinColumn(name = "teacher_id", nullable = false)
