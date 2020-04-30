@@ -25,6 +25,10 @@ public class Enrollment {
     @JoinColumn(name = "student_id", nullable = false)
     private Student student;
 
+    @ManyToOne
+    @JoinColumn(name = "course_id")
+    private Course course;
+    
     private int level;
 
     @Column(name = "content_order")

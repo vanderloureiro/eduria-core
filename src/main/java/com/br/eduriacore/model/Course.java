@@ -29,6 +29,9 @@ public class Course {
     @JoinColumn(name = "teacher_id", nullable = false)
     private Teacher teacher;
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "course")
+    private List<Enrollment> enrollments;
+
     @Column(name = "course_name", nullable = false)
     private String courseName;
 
