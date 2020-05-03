@@ -22,7 +22,7 @@ public class StudentService {
         this.mapper = mapper;
     }
 
-    public StudentDto findById(Long id) throws Exception {
+    public StudentDto getById(Long id) throws Exception {
         Optional<Student> student = this.repository.findById(id);
         if (student.isPresent()) {
             return this.mapper.toDto(student.get());
@@ -31,13 +31,21 @@ public class StudentService {
         }
     }
 
-    public StudentDto create(StudentDto studentDto) throws Exception {
-        Student studentToSave = this.mapper.toEntity(studentDto);
-        try {
-            Student returnStudent = this.repository.save(studentToSave);
-            return this.mapper.toDto(returnStudent);
-        } catch (Exception e) {
-            throw new Exception("Error on create");
+    public StudentDto create(StudentDto studentDto) {
+        Student studentToSave = this.mapper.toEntityWithoutId(studentDto);
+        Student returnStudent = this.repository.save(studentToSave);
+        return this.mapper.toDto(returnStudent);
+    }
+
+    public StudentDto update(StudentDto studentDto, long id) throws Exception {
+        Optional<Student> student = this.repository.findById(id);
+        if (student.isPresent()) {
+            Student entity = this.mapper.toEntityWithoutId(studentDto);
+            entity.setId(id);
+            return this.mapper.toDto(this.repository.save(entity));
+
+        } else {
+            throw new Exception("Student not found");
         }
     }
 
@@ -50,11 +58,7 @@ public class StudentService {
     }
 
     public void delete(Long id) throws Exception {
-        try {
-            this.repository.deleteById(id);
-        } catch (Exception e) {
-            throw new Exception("Error on delete");
-        }
+        this.repository.deleteById(id);
     }
 
 }
