@@ -10,6 +10,5 @@ public class TeacherDto {
     private String email;
     private String password;
     private String phone;
-    private CourseDto courses[];
 
 }
