@@ -3,8 +3,8 @@ package com.br.eduriacore.controller;
 import java.net.URI;
 import java.util.List;
 
-import com.br.eduriacore.dto.StudentDto;
-import com.br.eduriacore.service.StudentService;
+import com.br.eduriacore.dto.TeacherDto;
+import com.br.eduriacore.service.TeacherService;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,60 +27,60 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
 @CrossOrigin(origins = "*")
-@Api(value = "Students API")
+@Api(value = "Teachers API")
+@RequestMapping("/teacher")
 @RestController
-@RequestMapping("/student")
-public class StudentController {
+public class TeacherController {
+    
+    private TeacherService teacherService;
 
-    private StudentService studentService;
-
-    public StudentController(StudentService studentService) {
-        this.studentService = studentService;
+    public TeacherController(TeacherService teacherService) {
+        this.teacherService = teacherService;
     }
 
     @PostMapping
-    @ApiOperation(value = "Creates a new student", response = StudentDto.class)
-    public ResponseEntity<StudentDto> create(
-        @RequestBody StudentDto studentDto, UriComponentsBuilder uriBuilder) {
+    @ApiOperation(value = "Creates a new teacher", response = TeacherDto.class)
+    public ResponseEntity<TeacherDto> create(
+        @RequestBody TeacherDto teacherDto, UriComponentsBuilder uriBuilder) {
         try {
-            StudentDto student = this.studentService.create(studentDto);
-            URI uri = uriBuilder.path("/student/{id}").buildAndExpand(student.getId()).toUri();
-            return ResponseEntity.created(uri).body(student);
+            TeacherDto teacher = this.teacherService.create(teacherDto);
+            URI uri = uriBuilder.path("/teacher/{id}").buildAndExpand(teacher.getId()).toUri();
+            return ResponseEntity.created(uri).body(teacher);
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
     }
 
-    @GetMapping
-    @ApiOperation(value = "Get a paginated list of students", response = StudentDto.class, responseContainer = "List")
-    public ResponseEntity<List<StudentDto>> get(
-        @PageableDefault(sort = "id", direction = Direction.ASC, page = 0, size = 10) Pageable pagination) {
-        
-        Page<StudentDto> students = this.studentService.get(pagination);
-        HttpHeaders headers       = new HttpHeaders();
-        headers.add("length", Long.toString(students.getTotalElements()));
-        headers.add(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, "length");
-        
-        return ResponseEntity.ok().headers(headers).body(students.getContent());
-    }
-
-    @GetMapping("{/id}")
-    @ApiOperation(value = "Get a student by their id", response = StudentDto.class)
-    public ResponseEntity<StudentDto> getById(@PathVariable Long id) {
+    @GetMapping("/{id}")
+    @ApiOperation(value = "Get a teacher by their id", response = TeacherDto.class)
+    public ResponseEntity<TeacherDto> findById(@PathVariable Long id) {
         try {
-            StudentDto dto = this.studentService.getById(id); 
+            TeacherDto dto = this.teacherService.getById(id); 
             return ResponseEntity.ok().body(dto);
         } catch (Exception e) {
             return ResponseEntity.notFound().build();
         }
     }
 
+    @GetMapping
+    @ApiOperation(value = "Get a paginated list of teachers", response = TeacherDto.class, responseContainer = "List")
+    public ResponseEntity<List<TeacherDto>> get(
+        @PageableDefault(sort = "id", direction = Direction.ASC, page = 0, size = 10) Pageable pagination) {
+        
+        Page<TeacherDto> teachers = this.teacherService.get(pagination);
+        HttpHeaders headers       = new HttpHeaders();
+        headers.add("length", Long.toString(teachers.getTotalElements()));
+        headers.add(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, "length");
+        
+        return ResponseEntity.ok().headers(headers).body(teachers.getContent());
+    }
+
     @PutMapping("/{id}")
-    @ApiOperation(value = "Updates a students", response = StudentDto.class)
-    public ResponseEntity<StudentDto> update(@RequestBody StudentDto studentDto, @PathVariable Long id) {
+    @ApiOperation(value = "Updates a teacher", response = TeacherDto.class)
+    public ResponseEntity<TeacherDto> update(@RequestBody TeacherDto teacherDto, @PathVariable Long id) {
         try {
-            StudentDto studentDtoToReturn = this.studentService.update(studentDto, id);
-            return ResponseEntity.ok().body(studentDtoToReturn);
+            TeacherDto teacherDtoToReturn = this.teacherService.update(teacherDto, id);
+            return ResponseEntity.ok().body(teacherDtoToReturn);
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
@@ -90,11 +90,10 @@ public class StudentController {
     @ApiOperation(value = "Deletes a student by their id")
     public ResponseEntity<?> detele(@PathVariable Long id) {
         try {
-            this.studentService.delete(id);
+            this.teacherService.delete(id);
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             return ResponseEntity.notFound().build();
         }
     }
-    
 }
