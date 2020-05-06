@@ -1,5 +1,6 @@
 package com.br.eduriacore.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -19,12 +20,16 @@ public abstract class Person {
     @GeneratedValue
     private Long id;
     
+    @Column(nullable = false)
     private String name;
 
+    @Column(nullable = false, length = 40)
     private String email;
 
+    @Column(nullable = false, length = 40)
     private String password;
 
+    @Column(length = 40)
     private String phone;
 
 }
