@@ -3,6 +3,7 @@ package com.br.eduriacore.service;
 import java.util.Optional;
 
 import com.br.eduriacore.dto.StudentDto;
+import com.br.eduriacore.exception.NotFoundException;
 import com.br.eduriacore.mapper.StudentMapper;
 import com.br.eduriacore.model.Student;
 import com.br.eduriacore.repository.StudentRepository;
@@ -22,13 +23,12 @@ public class StudentService {
         this.mapper = mapper;
     }
 
-    public StudentDto getById(Long id) throws Exception {
+    public StudentDto getById(Long id) {
         Optional<Student> student = this.repository.findById(id);
         if (student.isPresent()) {
             return this.mapper.toDto(student.get());
-        } else {
-            throw new Exception("Student not find");
         }
+        throw new NotFoundException("Student not found");
     }
 
     public StudentDto create(StudentDto studentDto) {
@@ -37,16 +37,15 @@ public class StudentService {
         return this.mapper.toDto(returnStudent);
     }
 
-    public StudentDto update(StudentDto studentDto, long id) throws Exception {
+    public StudentDto update(StudentDto studentDto, long id) {
         Optional<Student> student = this.repository.findById(id);
         if (student.isPresent()) {
             Student entity = this.mapper.toEntityWithoutId(studentDto);
             entity.setId(id);
             return this.mapper.toDto(this.repository.save(entity));
 
-        } else {
-            throw new Exception("Student not found");
         }
+        throw new NotFoundException("Student not found");
     }
 
     public Page<StudentDto> get(Pageable pagination) {

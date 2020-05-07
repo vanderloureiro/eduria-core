@@ -3,6 +3,7 @@ package com.br.eduriacore.service;
 import java.util.Optional;
 
 import com.br.eduriacore.dto.TeacherDto;
+import com.br.eduriacore.exception.NotFoundException;
 import com.br.eduriacore.mapper.TeacherMapper;
 import com.br.eduriacore.model.Teacher;
 import com.br.eduriacore.repository.TeacherRepository;
@@ -35,22 +36,25 @@ public class TeacherService {
         );
     }
 
-    public TeacherDto getById(Long id) throws Exception {
-        Optional<Teacher> teacher = this.repository.findById(id);
-        if (teacher.isPresent()) {
-            return this.mapper.toDto(teacher.get());
-        }
-        throw new Exception("Teacher not found");
+    public TeacherDto getById(Long id) {
+        return this.mapper.toDto(this.getEntityById(id));
     }
 
-    public TeacherDto update(TeacherDto teacherDto, Long id) throws Exception {
+    public Teacher getEntityById(Long id) {
+        Optional<Teacher> teacher = this.repository.findById(id);
+        if (teacher.isPresent()) return teacher.get(); 
+        throw new NotFoundException("Teacher not found");
+    }
+
+    // refactor
+    public TeacherDto update(TeacherDto teacherDto, Long id) {
         Optional<Teacher> teacher = this.repository.findById(id);
         if (teacher.isPresent()) {
             Teacher teacherToUpdate = this.mapper.toEntityWithoutId(teacherDto);
             teacherToUpdate.setId(teacher.get().getId());
             return this.mapper.toDto(this.repository.save(teacherToUpdate));
         }
-        throw new Exception("Teacher not found");
+        throw new NotFoundException("Teacher not found");
     }
 
     public void delete(Long id) {
