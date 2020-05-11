@@ -3,8 +3,6 @@ package com.br.eduriacore.service;
 import java.util.Optional;
 
 import com.br.eduriacore.dto.CourseDto;
-import com.br.eduriacore.dto.TeacherDto;
-import com.br.eduriacore.exception.BadRequestException;
 import com.br.eduriacore.exception.NotFoundException;
 import com.br.eduriacore.mapper.CourseMapper;
 import com.br.eduriacore.model.Course;
@@ -29,15 +27,11 @@ public class CourseService {
     }
 
     public CourseDto create(CourseDto courseDto) {
-        try {
-            Teacher teacher     = this.teacherService.getEntityById(courseDto.getTeacherId());
-            Course courseToSave = new Course();
-            courseToSave.setCourseName(courseDto.getCourseName());
-            courseToSave.setTeacher(teacher);
-            return this.mapper.toDto(this.repository.save(courseToSave));
-        } catch (NotFoundException e) {
-            throw new BadRequestException("Teacher not found");
-        }
+        Teacher teacher     = this.teacherService.getEntityById(courseDto.getTeacherId());
+        Course courseToSave = new Course();
+        courseToSave.setCourseName(courseDto.getCourseName());
+        courseToSave.setTeacher(teacher);
+        return this.mapper.toDto(this.repository.save(courseToSave));
     }
 
     public CourseDto getById(Long id) {

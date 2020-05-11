@@ -64,7 +64,7 @@ public class StudentController {
         return ResponseEntity.ok().headers(headers).body(students.getContent());
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     @ApiOperation(value = "Get a student by their id", response = StudentDto.class)
     public ResponseEntity<StudentDto> getById(@PathVariable Long id) {
         try {
