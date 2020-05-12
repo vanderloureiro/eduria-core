@@ -53,7 +53,7 @@ public class CourseController {
     @GetMapping
     @ApiOperation(value = "Get a paginated list of courses", response = CourseDto.class, responseContainer = "List")
     public ResponseEntity<List<CourseDto>> get(
-        @PageableDefault(sort = "id", direction = Direction.ASC, page = 0, size = 10) Pageable pagination) {
+        @PageableDefault(sort = "courseId", direction = Direction.ASC, page = 0, size = 10) Pageable pagination) {
         
         Page<CourseDto> courses = this.courseService.get(pagination);
         HttpHeaders headers     = new HttpHeaders();
