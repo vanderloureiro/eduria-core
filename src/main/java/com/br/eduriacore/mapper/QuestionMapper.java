@@ -1,6 +1,7 @@
 package com.br.eduriacore.mapper;
 
 import com.br.eduriacore.dto.QuestionDto;
+import com.br.eduriacore.model.Course;
 import com.br.eduriacore.model.Question;
 
 import org.springframework.stereotype.Component;
@@ -22,6 +23,24 @@ public class QuestionMapper {
         dto.setContentOrder(entity.getContentOrder());
         dto.setQuestionLevel(entity.getQuestionLevel());
         return dto;
+    }
+
+    public Question toEntityWithoutId(QuestionDto dto) {
+        Question entity = new Question();
+        Course courseEntity = new Course();
+        courseEntity.setCourseId(dto.getCourseId());
+
+        entity.setCourse(courseEntity);
+        entity.setText(dto.getText());
+        entity.setDescription(dto.getDescription());
+        entity.setAlternative1(dto.getAlternative1());
+        entity.setAlternative2(dto.getAlternative2());
+        entity.setAlternative3(dto.getAlternative3());
+        entity.setAlternative4(dto.getAlternative4());
+        entity.setCorrectAlternative(dto.getCorrectAlternative());
+        entity.setContentOrder(dto.getContentOrder());
+        entity.setQuestionLevel(dto.getQuestionLevel());
+        return entity;
     }
 
 }
