@@ -6,7 +6,8 @@ import lombok.Data;
 public class EnrollmentDto {
 
     private Long enrollmentId;
-    private CourseDto course;
+    private Long studentId;
+    private Long courseId;
     private int level;
     private int contentOrder;
 
