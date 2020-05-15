@@ -24,11 +24,7 @@ public class StudentService {
     }
 
     public StudentDto getById(Long id) {
-        Optional<Student> student = this.repository.findById(id);
-        if (student.isPresent()) {
-            return this.mapper.toDto(student.get());
-        }
-        throw new NotFoundException("Student not found");
+        return this.mapper.toDto(this.getEntityById(id));
     }
 
     public StudentDto create(StudentDto studentDto) {
@@ -38,14 +34,10 @@ public class StudentService {
     }
 
     public StudentDto update(StudentDto studentDto, long id) {
-        Optional<Student> student = this.repository.findById(id);
-        if (student.isPresent()) {
-            Student entity = this.mapper.toEntityWithoutId(studentDto);
-            entity.setId(id);
-            return this.mapper.toDto(this.repository.save(entity));
-
-        }
-        throw new NotFoundException("Student not found");
+        Student student = this.getEntityById(id);
+        Student entity  = this.mapper.toEntityWithoutId(studentDto);
+        entity.setId(student.getId());
+        return this.mapper.toDto(this.repository.save(entity));
     }
 
     public Page<StudentDto> get(Pageable pagination) {
@@ -58,6 +50,14 @@ public class StudentService {
 
     public void delete(Long id) throws Exception {
         this.repository.deleteById(id);
+    }
+
+    public Student getEntityById(Long id) {
+        Optional<Student> student = this.repository.findById(id);
+        if (student.isPresent()) {
+            return student.get();
+        }
+        throw new NotFoundException("Student not found");
     }
 
 }
