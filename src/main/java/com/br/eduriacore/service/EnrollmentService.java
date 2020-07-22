@@ -30,6 +30,7 @@ public class EnrollmentService {
         this.courseService = courseService;
     }
 
+    // Refactor to use EnrollmentForm
     public EnrollmentDto create(EnrollmentDto form) {
         Course course   = this.courseService.getEntityById(form.getCourseId());
         Student student = this.studentService.getEntityById(form.getStudentId());

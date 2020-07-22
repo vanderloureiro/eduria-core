@@ -1,20 +1,34 @@
 package com.br.eduriacore.service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
+import com.br.eduriacore.dto.EnrollmentDto;
+import com.br.eduriacore.dto.QuestionDto;
+import com.br.eduriacore.dto.QuestionPresentedDto;
+import com.br.eduriacore.dto.ResponseResultDto;
+import com.br.eduriacore.mapper.EvaluatorMapper;
 import com.br.eduriacore.model.Qtable;
 
 import org.springframework.stereotype.Service;
 
 @Service
-public class AppraiserService {
+public class EvaluatorService {
 
     private Map<String, Double> rewardsRules = new HashMap<String, Double>();
     private QtableService qtableService;
+    private EvaluatorMapper evaluatorMapper;
+    private QuestionService questionService;
+    private EnrollmentService enrollmentService;
 
-    public AppraiserService(QtableService qtableService) {
+    public EvaluatorService(QtableService qtableService, EvaluatorMapper evaluatorMapper,
+            EnrollmentService enrollmentService, QuestionService questionService) {
         this.qtableService = qtableService;
+        this.evaluatorMapper = evaluatorMapper;
+        this.enrollmentService = enrollmentService;
+        this.questionService = questionService;
         this.fillMap();
     }
 
@@ -28,6 +42,7 @@ public class AppraiserService {
         this.rewardsRules.put("CL3C1", 10.0);
         this.rewardsRules.put("CL3C2", 10.0);
         this.rewardsRules.put("CL3C3", 10.0);
+        
         this.rewardsRules.put("WL1C1", 10.0);
         this.rewardsRules.put("WL1C2", 10.0);
         this.rewardsRules.put("WL1C3", 10.0);
@@ -55,4 +70,19 @@ public class AppraiserService {
         String keyHash = "W";
         return this.rewardsRules.get(keyHash);
     }
+
+    public QuestionPresentedDto presentNewQuestion(Long enrollmentId) {
+        EnrollmentDto enrollmentDto = this.enrollmentService.getById(enrollmentId);
+        List<QuestionDto> selectedQuestions = this.questionService.getQuestionByLevelAndContentOrder(
+            enrollmentDto.getLevel(), enrollmentDto.getContentOrder());
+        
+        Random rand = new Random();
+        QuestionDto selectedRandomQuestion = selectedQuestions.get(rand.nextInt(selectedQuestions.size())); 
+        return this.evaluatorMapper.toQuestionPresentedDto(selectedRandomQuestion, enrollmentDto.getEnrollmentId());
+    }
+
+    public ResponseResultDto answerQuestion() {
+        return null;
+    }
+
 }

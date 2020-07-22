@@ -1,6 +1,10 @@
 package com.br.eduriacore.service;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import com.br.eduriacore.dto.QuestionDto;
 import com.br.eduriacore.exception.NotFoundException;
@@ -52,7 +56,15 @@ public class QuestionService {
             questionToUpdate.setCourse(course);
             return this.mapper.toDto(this.repository.save(questionToUpdate));
         }
-        return null;
+        throw new NotFoundException("Question not found");
+    }
+
+    public List<QuestionDto> getQuestionByLevelAndContentOrder(int level, int contentOrder) {
+        return this.repository.findAllByLevelAndContentOrder(level, contentOrder).stream().map(
+            questionEntity -> {
+                return this.mapper.toDto(questionEntity);
+            }
+        ).collect(Collectors.toList());
     }
 
     public void delete(Long id) {

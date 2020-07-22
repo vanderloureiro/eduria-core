@@ -38,7 +38,7 @@ public class CourseController {
 
     @PostMapping
     @ApiOperation(value = "Creates a new course", response = CourseDto.class)
-    public ResponseEntity<CourseDto> create(CourseDto courseDto) {
+    public ResponseEntity<CourseDto> create(@RequestBody CourseDto courseDto) {
         CourseDto courseDtoResponse = this.courseService.create(courseDto);
         return ResponseEntity.ok().body(courseDtoResponse);
     }
