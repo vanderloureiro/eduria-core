@@ -73,8 +73,8 @@ public class EvaluatorService {
 
     public QuestionPresentedDto presentNewQuestion(Long enrollmentId) {
         EnrollmentDto enrollmentDto = this.enrollmentService.getById(enrollmentId);
-        List<QuestionDto> selectedQuestions = this.questionService.getQuestionByLevelAndContentOrder(
-            enrollmentDto.getLevel(), enrollmentDto.getContentOrder());
+        List<QuestionDto> selectedQuestions = this.questionService.getQuestionByFilter(
+            enrollmentDto.getLevel(), enrollmentDto.getContentOrder(), enrollmentDto.getCourseId());
         
         Random rand = new Random();
         QuestionDto selectedRandomQuestion = selectedQuestions.get(rand.nextInt(selectedQuestions.size())); 

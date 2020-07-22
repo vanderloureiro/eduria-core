@@ -16,7 +16,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
 @CrossOrigin(origins = "*")
-@Api(value = "API principal para perguntas e respostas")
+@Api(value = "Main API for questions and answers")
 @RestController
 @RequestMapping("/evaluator")
 public class EvaluatorController {

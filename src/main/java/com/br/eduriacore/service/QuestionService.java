@@ -59,8 +59,8 @@ public class QuestionService {
         throw new NotFoundException("Question not found");
     }
 
-    public List<QuestionDto> getQuestionByLevelAndContentOrder(int level, int contentOrder) {
-        return this.repository.findAllByLevelAndContentOrder(level, contentOrder).stream().map(
+    public List<QuestionDto> getQuestionByFilter(int level, int contentOrder, Long courseId) {
+        return this.repository.findAllByFilters(level, contentOrder, courseId).stream().map(
             questionEntity -> {
                 return this.mapper.toDto(questionEntity);
             }
