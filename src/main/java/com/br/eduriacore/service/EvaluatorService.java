@@ -75,23 +75,46 @@ public class EvaluatorService {
 
     public QuestionPresentedDto presentNewQuestion(Long enrollmentId) {
         EnrollmentDto enrollmentDto = this.enrollmentService.getById(enrollmentId);
-        List<QuestionDto> selectedQuestions = this.questionService.getQuestionByFilter(
-            enrollmentDto.getLevel(), enrollmentDto.getContentOrder(), enrollmentDto.getCourseId());
+        List<QuestionDto> selectedQuestions = this.questionService.getQuestionByLevelAndCourse(
+            enrollmentDto.getLevel(), enrollmentDto.getCourseId());
         
         Random rand = new Random();
         QuestionDto selectedRandomQuestion = selectedQuestions.get(rand.nextInt(selectedQuestions.size())); 
         return this.evaluatorMapper.toQuestionPresentedDto(selectedRandomQuestion, enrollmentDto.getEnrollmentId());
     }
 
+    /*
+        Create update of note of student
+    */
     public ResponseResultDto answerQuestion(AnswerQuestionForm answerForm) {
         QuestionDto question = this.questionService.getById(answerForm.getQuestionId());
         EnrollmentDto enrollmentDto = this.enrollmentService.getById(answerForm.getEnrollmentId());
+        ResponseResultDto result = new ResponseResultDto();
+        result.setEnrollmentId(enrollmentDto.getEnrollmentId());
+        result.setQuestionId(question.getQuestionId());
+        result.setCorrectAlternative(this.getCorrectAlternative(question));
+
         if ( question.getCorrectAlternative() == answerForm.getSelectedAlternative()) {
-            this.responseReward(enrollmentDto.getCourseId(), true);
+            this.responseReward(enrollmentDto.getQtableId(), true);
+            result.setCorrectResponse(true);
         } else {
-            this.responseReward(enrollmentDto.getCourseId(), false);
+            this.responseReward(enrollmentDto.getQtableId(), false);
+            result.setCorrectResponse(false);
         }
-        return null;
+        return result;
+    }
+
+    private String getCorrectAlternative(QuestionDto question) {
+        switch (question.getCorrectAlternative()) {
+            case 1:
+                return "1 - " + question.getAlternative1();
+            case 2:
+                return "2 - " + question.getAlternative2();
+            case 3:
+                return "3 - " + question.getAlternative3();
+            default:
+                return "4 - " + question.getAlternative4();
+        }
     }
 
 

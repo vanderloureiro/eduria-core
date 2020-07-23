@@ -14,7 +14,6 @@ public class QuestionPresentedDto {
     private String alternative2;
     private String alternative3;
     private String alternative4;
-    private int contentOrder;
     private int questionLevel;
 
 }

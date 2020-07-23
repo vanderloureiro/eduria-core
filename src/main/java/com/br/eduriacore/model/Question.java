@@ -45,9 +45,6 @@ public class Question {
     @Column(name = "correct_alternative", nullable = false)
     private int correctAlternative;
 
-    @Column(name = "content_order", nullable = false)
-    private int contentOrder;
-
     @Column(name = "question_level", nullable = false)
     private int questionLevel;
 

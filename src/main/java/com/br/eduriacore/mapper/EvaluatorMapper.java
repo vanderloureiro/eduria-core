@@ -2,7 +2,6 @@ package com.br.eduriacore.mapper;
 
 import com.br.eduriacore.dto.QuestionDto;
 import com.br.eduriacore.dto.QuestionPresentedDto;
-import com.br.eduriacore.model.Question;
 
 import org.springframework.stereotype.Component;
 
@@ -20,7 +19,6 @@ public class EvaluatorMapper {
         dto.setAlternative2(question.getAlternative2());
         dto.setAlternative3(question.getAlternative3());
         dto.setAlternative4(question.getAlternative4());
-        dto.setContentOrder(question.getContentOrder());
         dto.setQuestionLevel(question.getQuestionLevel());
         return dto;
     }

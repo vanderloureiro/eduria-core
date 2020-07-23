@@ -33,9 +33,6 @@ public class Enrollment {
     
     private int level;
 
-    @Column(name = "content_order")
-    private int contentOrder;
-
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "qtable_id")
     private Qtable qtable;

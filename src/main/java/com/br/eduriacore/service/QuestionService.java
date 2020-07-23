@@ -1,9 +1,7 @@
 package com.br.eduriacore.service;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import com.br.eduriacore.dto.QuestionDto;
@@ -59,8 +57,8 @@ public class QuestionService {
         throw new NotFoundException("Question not found");
     }
 
-    public List<QuestionDto> getQuestionByFilter(int level, int contentOrder, Long courseId) {
-        return this.repository.findAllByFilters(level, contentOrder, courseId).stream().map(
+    public List<QuestionDto> getQuestionByLevelAndCourse(int level, Long courseId) {
+        return this.repository.findAllByLevelAndCourse(level, courseId).stream().map(
             questionEntity -> {
                 return this.mapper.toDto(questionEntity);
             }

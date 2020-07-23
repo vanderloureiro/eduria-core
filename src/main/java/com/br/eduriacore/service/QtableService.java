@@ -125,20 +125,6 @@ public class QtableService {
         return this.repository.save(qtable);
     }
 
-    // método com a função Q
-    // Q(s, t) = Q(s, t) + alpha * (r + gamma * max(s+1, a) - Q(s, t))
-    /*
-    private void funcaoQ(int indiceAcao, int reforco) {
-
-        double valorAtual = this.matrizQ[this.indiceEstadoAtual][indiceAcao];
-
-        double resultado = valorAtual
-            + this.ALPHA * (reforco + this.GAMMA * this.maximaRecompensaProximoEstado() - valorAtual);
-
-        BigDecimal bigd = new BigDecimal(resultado).setScale(2, RoundingMode.HALF_EVEN);
-        this.matrizQ[this.indiceEstadoAtual][indiceAcao] = bigd.doubleValue();
-    }*/
-
     public Qtable changeCurrentState(Long qtableId, int newState) {
         Qtable qtable = this.getById(qtableId);
         qtable.setIndexCurrentState(newState);

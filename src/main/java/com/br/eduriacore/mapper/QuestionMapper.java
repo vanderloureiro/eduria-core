@@ -20,7 +20,6 @@ public class QuestionMapper {
         dto.setAlternative3(entity.getAlternative3());
         dto.setAlternative4(entity.getAlternative4());
         dto.setCorrectAlternative(entity.getCorrectAlternative());
-        dto.setContentOrder(entity.getContentOrder());
         dto.setQuestionLevel(entity.getQuestionLevel());
         return dto;
     }
@@ -38,7 +37,6 @@ public class QuestionMapper {
         entity.setAlternative3(dto.getAlternative3());
         entity.setAlternative4(dto.getAlternative4());
         entity.setCorrectAlternative(dto.getCorrectAlternative());
-        entity.setContentOrder(dto.getContentOrder());
         entity.setQuestionLevel(dto.getQuestionLevel());
         return entity;
     }
