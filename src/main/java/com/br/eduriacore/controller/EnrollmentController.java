@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.List;
 
 import com.br.eduriacore.dto.EnrollmentDto;
+import com.br.eduriacore.form.EnrollmentForm;
 import com.br.eduriacore.service.EnrollmentService;
 
 import org.springframework.data.domain.Page;
@@ -40,7 +41,7 @@ public class EnrollmentController {
     @PostMapping
     @ApiOperation(value = "Creates a new enrollment", response = EnrollmentDto.class)
     public ResponseEntity<EnrollmentDto> create(
-        @RequestBody EnrollmentDto enrollmentDto, UriComponentsBuilder uriBuilder) {
+        @RequestBody EnrollmentForm enrollmentDto, UriComponentsBuilder uriBuilder) {
         try {
             EnrollmentDto enrollment = this.enrollmentService.create(enrollmentDto);
             URI uri = uriBuilder.path("/enrollment/{id}").buildAndExpand(enrollment.getEnrollmentId()).toUri();

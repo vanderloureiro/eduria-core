@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
-import com.br.eduriacore.exception.BadRequestException;
 import com.br.eduriacore.exception.NotFoundException;
 import com.br.eduriacore.model.Qtable;
 import com.br.eduriacore.repository.QtableRepository;
@@ -25,7 +24,7 @@ public class QtableService {
         this.repository = repository;
     }
 
-    public Qtable createQtable(int numerOfRandomExecutions, int indexCurrentState) {
+    public Qtable createDefaultQtable() {
         Qtable table = new Qtable();
         table.setL1C1(0.0);
         table.setL1C2(0.0);
@@ -37,8 +36,9 @@ public class QtableService {
         table.setL3C2(0.0);
         table.setL3C3(0.0);
 
-        table.setQtdRandom(numerOfRandomExecutions);
-        table.setIndexCurrentState(indexCurrentState);
+        table.setQtdRandom(20);
+        // starting in medium level
+        table.setIndexCurrentState(2);
 
         return this.repository.save(table);
     }

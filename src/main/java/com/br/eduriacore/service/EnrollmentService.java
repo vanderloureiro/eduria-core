@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import com.br.eduriacore.dto.EnrollmentDto;
 import com.br.eduriacore.exception.NotFoundException;
+import com.br.eduriacore.form.EnrollmentForm;
 import com.br.eduriacore.mapper.EnrollmentMapper;
 import com.br.eduriacore.model.Course;
 import com.br.eduriacore.model.Enrollment;
@@ -21,23 +22,26 @@ public class EnrollmentService {
     private EnrollmentMapper mapper;
     private StudentService studentService;
     private CourseService courseService;
+    private QtableService qtableService;
 
     public EnrollmentService(EnrollmentRepository repository, StudentService studentService, EnrollmentMapper mapper,
-            CourseService courseService) {
+            CourseService courseService, QtableService qtableService) {
         this.repository = repository;
         this.studentService = studentService;
         this.mapper = mapper;
         this.courseService = courseService;
+        this.qtableService = qtableService;
     }
 
-    // Refactor to use EnrollmentForm
-    public EnrollmentDto create(EnrollmentDto form) {
+    public EnrollmentDto create(EnrollmentForm form) {
         Course course   = this.courseService.getEntityById(form.getCourseId());
         Student student = this.studentService.getEntityById(form.getStudentId());
 
-        Enrollment enrollment = this.mapper.toEntityWithoutId(form);
+        Enrollment enrollment = new Enrollment();
+
         enrollment.setCourse(course);
         enrollment.setStudent(student);
+        enrollment.setQtable(this.qtableService.createDefaultQtable());
 
         return this.mapper.toDto(this.repository.save(enrollment));
     }

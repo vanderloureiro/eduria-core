@@ -8,6 +8,7 @@ public class EnrollmentDto {
     private Long enrollmentId;
     private Long studentId;
     private Long courseId;
+    private Long qtableId;
     private int level;
     private int contentOrder;
 

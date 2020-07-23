@@ -13,7 +13,7 @@ public class QuestionDto {
     private String alternative2;
     private String alternative3;
     private String alternative4;
-    private String correctAlternative;
+    private int correctAlternative;
     private int contentOrder;
     private int questionLevel;
     

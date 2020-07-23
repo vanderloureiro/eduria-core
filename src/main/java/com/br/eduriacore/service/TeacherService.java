@@ -46,7 +46,6 @@ public class TeacherService {
         throw new NotFoundException("Teacher not found");
     }
 
-    // refactor
     public TeacherDto update(TeacherDto teacherDto, Long id) {
         Optional<Teacher> teacher = this.repository.findById(id);
         if (teacher.isPresent()) {

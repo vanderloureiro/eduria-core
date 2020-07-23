@@ -43,7 +43,7 @@ public class Question {
     private String alternative4;
 
     @Column(name = "correct_alternative", nullable = false)
-    private String correctAlternative;
+    private int correctAlternative;
 
     @Column(name = "content_order", nullable = false)
     private int contentOrder;
