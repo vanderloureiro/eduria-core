@@ -10,5 +10,6 @@ public class EnrollmentDto {
     private Long courseId;
     private Long qtableId;
     private int level;
+    private Double score;
 
 }

@@ -69,4 +69,8 @@ public class EnrollmentService {
     public void delete(Long id) {
         this.repository.deleteById(id);
     }
+
+    public EnrollmentDto updateEnrollment(Enrollment updatedEnrollment) {
+        return this.mapper.toDto(this.repository.save(updatedEnrollment));
+    }
 }

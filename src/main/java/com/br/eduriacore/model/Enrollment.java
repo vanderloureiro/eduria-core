@@ -33,6 +33,8 @@ public class Enrollment {
     
     private int level;
 
+    private Double score;
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "qtable_id")
     private Qtable qtable;

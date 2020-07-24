@@ -11,6 +11,7 @@ import com.br.eduriacore.dto.QuestionPresentedDto;
 import com.br.eduriacore.dto.ResponseResultDto;
 import com.br.eduriacore.form.AnswerQuestionForm;
 import com.br.eduriacore.mapper.EvaluatorMapper;
+import com.br.eduriacore.model.Enrollment;
 import com.br.eduriacore.model.Qtable;
 
 import org.springframework.stereotype.Service;
@@ -64,13 +65,15 @@ public class EvaluatorService {
     }
 
     private Double correctAnswerReward(Qtable qtable, int bestActionIndex) {
-        String keyHash = "C";
-        return this.rewardsRules.get(keyHash);
+        // String keyHash = "C";
+        // return this.rewardsRules.get(keyHash);
+        return 1.0;
     }
 
     private Double wrongAnswerReward(Qtable qtable, int bestActionIndex) {
-        String keyHash = "W";
-        return this.rewardsRules.get(keyHash);
+        // String keyHash = "W";
+        // return this.rewardsRules.get(keyHash);
+        return -1.0;
     }
 
     public QuestionPresentedDto presentNewQuestion(Long enrollmentId) {
@@ -83,22 +86,24 @@ public class EvaluatorService {
         return this.evaluatorMapper.toQuestionPresentedDto(selectedRandomQuestion, enrollmentDto.getEnrollmentId());
     }
 
-    /*
-        Create update of note of student
-    */
+    
     public ResponseResultDto answerQuestion(AnswerQuestionForm answerForm) {
-        QuestionDto question = this.questionService.getById(answerForm.getQuestionId());
-        EnrollmentDto enrollmentDto = this.enrollmentService.getById(answerForm.getEnrollmentId());
+        QuestionDto question  = this.questionService.getById(answerForm.getQuestionId());
+        Enrollment enrollment = this.enrollmentService.getEntityById(answerForm.getEnrollmentId());
         ResponseResultDto result = new ResponseResultDto();
-        result.setEnrollmentId(enrollmentDto.getEnrollmentId());
+        result.setEnrollmentId(enrollment.getEnrollmentId());
         result.setQuestionId(question.getQuestionId());
         result.setCorrectAlternative(this.getCorrectAlternative(question));
 
         if ( question.getCorrectAlternative() == answerForm.getSelectedAlternative()) {
-            this.responseReward(enrollmentDto.getQtableId(), true);
+
+            this.responseReward(enrollment.getQtable().getQTableId(), true);
+            result.setScore(this.updateEnrollmentScore(enrollment, true));
             result.setCorrectResponse(true);
         } else {
-            this.responseReward(enrollmentDto.getQtableId(), false);
+
+            this.responseReward(enrollment.getQtable().getQTableId(), false);
+            result.setScore(this.updateEnrollmentScore(enrollment, false));
             result.setCorrectResponse(false);
         }
         return result;
@@ -114,6 +119,29 @@ public class EvaluatorService {
                 return "3 - " + question.getAlternative3();
             default:
                 return "4 - " + question.getAlternative4();
+        }
+    }
+
+    private Double updateEnrollmentScore(Enrollment enrollment, boolean isRightAnswer) {
+        if (isRightAnswer && enrollment.getScore() < 10) {
+            Double newScore = enrollment.getScore() + 1;
+            enrollment.setScore(newScore);
+            enrollment.setLevel(this.returnLevel(newScore));
+        } else if ( !isRightAnswer && enrollment.getScore() > 0) {
+            Double newScore = enrollment.getScore() - 1;
+            enrollment.setScore(newScore);
+            enrollment.setLevel(this.returnLevel(newScore));
+        }
+        return this.enrollmentService.updateEnrollment(enrollment).getScore();
+    }
+
+    private int returnLevel(Double score) {
+        if ( score < 4 ) {
+            return 0;
+        } else if ( score >= 4 && score < 7 ) {
+            return 1;
+        } else {
+            return 2;
         }
     }
 
