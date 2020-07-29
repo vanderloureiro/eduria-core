@@ -15,8 +15,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class QtableService {
 
-    private final double ALPHA = 0.1;
-    private final double GAMMA = 0.7;
+    private final double ALPHA = 0.5;
+    private final double GAMMA = 0.5;
 
     private QtableRepository repository;
 
@@ -24,7 +24,7 @@ public class QtableService {
         this.repository = repository;
     }
 
-    public Qtable createDefaultQtable() {
+    public Qtable createDefaultQtable(int qtdExploration, int initialState) {
         Qtable table = new Qtable();
         table.setL1C1(0.0);
         table.setL1C2(0.0);
@@ -36,28 +36,30 @@ public class QtableService {
         table.setL3C2(0.0);
         table.setL3C3(0.0);
 
-        table.setQtdRandom(20);
-        // starting in medium level
-        table.setIndexCurrentState(2);
-
+        table.setQtdRandom(qtdExploration);
+        table.setIndexCurrentState(initialState);
         return this.repository.save(table);
     }
 
     public Integer getBestAction(Long id) {
         Qtable qtable = this.getById(id);
         if (qtable.getCurrentRandom() > qtable.getQtdRandom()) {
-            if (qtable.getIndexCurrentState() == 0) {
-                return this.returnBestActionIndex(qtable.getL1C1(), qtable.getL1C2(), qtable.getL1C3());
-            } else if (qtable.getIndexCurrentState() == 1) {
-                return this.returnBestActionIndex(qtable.getL2C1(), qtable.getL2C2(), qtable.getL2C3());
-            } else {
-                return this.returnBestActionIndex(qtable.getL3C1(), qtable.getL3C2(), qtable.getL3C3());
-            }
+            return this.getBestActionIndex(qtable);
         } else {
             qtable.setCurrentRandom(qtable.getCurrentRandom() + 1);
             this.repository.save(qtable);
             Random generator = new Random();
             return generator.nextInt(3);
+        }
+    }
+
+    private Integer getBestActionIndex(Qtable qtable) {
+        if (qtable.getIndexCurrentState() == 0) {
+            return this.returnBestActionIndex(qtable.getL1C1(), qtable.getL1C2(), qtable.getL1C3());
+        } else if (qtable.getIndexCurrentState() == 1) {
+            return this.returnBestActionIndex(qtable.getL2C1(), qtable.getL2C2(), qtable.getL2C3());
+        } else {
+            return this.returnBestActionIndex(qtable.getL3C1(), qtable.getL3C2(), qtable.getL3C3());
         }
     }
 
@@ -85,7 +87,7 @@ public class QtableService {
 
     public Qtable applyReinforcement(Long qtableId, Double reward) {
         Qtable qtable  = this.getById(qtableId);
-        int bestActionIndex = this.getBestAction(qtableId);
+        int bestActionIndex = this.getBestActionIndex(qtable);
         Double bestActionNextState = this.getBestActionNextState(qtable);
         Double bestActionActual    = this.getMatrixValue(qtable, qtable.getIndexCurrentState(), bestActionIndex);
 
@@ -135,21 +137,6 @@ public class QtableService {
         Optional<Qtable> table = this.repository.findById(id);
         if (table.isPresent()) {
             return table.get();
-        }
-        throw new NotFoundException("Qtable not found");
-    }
-
-    public Qtable update(Qtable entity, Long id) {
-        if (this.repository.findById(id).isPresent()) {
-            entity.setQTableId(id);
-            return this.repository.save(entity);
-        }
-        throw new NotFoundException("Qtable not found");
-    }
-
-    public void deleteById(Long id) {
-        if (this.repository.findById(id).isPresent()) {
-            this.repository.deleteById(id);
         }
         throw new NotFoundException("Qtable not found");
     }

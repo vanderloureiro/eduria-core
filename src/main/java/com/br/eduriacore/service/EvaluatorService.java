@@ -1,8 +1,6 @@
 package com.br.eduriacore.service;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 import com.br.eduriacore.dto.EnrollmentDto;
@@ -19,8 +17,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class EvaluatorService {
 
-    private Map<String, Double> rewardsRules = new HashMap<String, Double>();
-
     private QtableService qtableService;
     private EvaluatorMapper evaluatorMapper;
     private QuestionService questionService;
@@ -32,62 +28,29 @@ public class EvaluatorService {
         this.evaluatorMapper = evaluatorMapper;
         this.enrollmentService = enrollmentService;
         this.questionService = questionService;
-        this.fillMap();
-    }
-
-    private void fillMap() {
-        this.rewardsRules.put("CL1C1", 10.0);
-        this.rewardsRules.put("CL1C2", 10.0);
-        this.rewardsRules.put("CL1C3", 10.0);
-        this.rewardsRules.put("CL2C1", 10.0);
-        this.rewardsRules.put("CL2C2", 10.0);
-        this.rewardsRules.put("CL2C3", 10.0);
-        this.rewardsRules.put("CL3C1", 10.0);
-        this.rewardsRules.put("CL3C2", 10.0);
-        this.rewardsRules.put("CL3C3", 10.0);
-        
-        this.rewardsRules.put("WL1C1", -10.0);
-        this.rewardsRules.put("WL1C2", -10.0);
-        this.rewardsRules.put("WL1C3", -10.0);
-        this.rewardsRules.put("WL2C1", -10.0);
-        this.rewardsRules.put("WL2C2", -10.0);
-        this.rewardsRules.put("WL2C3", -10.0);
-        this.rewardsRules.put("WL3C1", -10.0);
-        this.rewardsRules.put("WL3C2", -10.0);
-        this.rewardsRules.put("WL3C3", -10.0);
     }
 
     private Qtable responseReward(Long idQtable, boolean isCorrectResponse) {
-        int bestActionIndex = this.qtableService.getBestAction(idQtable);
-        Qtable qtable = this.qtableService.getById(idQtable);
-        double reward = isCorrectResponse ? correctAnswerReward(qtable, bestActionIndex) : wrongAnswerReward(qtable, bestActionIndex);
+        double reward = isCorrectResponse ? 1 : -1;
         return this.qtableService.applyReinforcement(idQtable, reward);
-    }
-
-    private Double correctAnswerReward(Qtable qtable, int bestActionIndex) {
-        // String keyHash = "C";
-        // return this.rewardsRules.get(keyHash);
-        return 1.0;
-    }
-
-    private Double wrongAnswerReward(Qtable qtable, int bestActionIndex) {
-        // String keyHash = "W";
-        // return this.rewardsRules.get(keyHash);
-        return -1.0;
     }
 
     public QuestionPresentedDto presentNewQuestion(Long enrollmentId) {
         EnrollmentDto enrollmentDto = this.enrollmentService.getById(enrollmentId);
+
+        int bestAction = this.qtableService.getBestAction(enrollmentDto.getQtableId());
+
         List<QuestionDto> selectedQuestions = this.questionService.getQuestionByLevelAndCourse(
-            enrollmentDto.getLevel(), enrollmentDto.getCourseId());
+            bestAction, enrollmentDto.getCourseId());
         
         Random rand = new Random();
+        
         QuestionDto selectedRandomQuestion = selectedQuestions.get(rand.nextInt(selectedQuestions.size())); 
         return this.evaluatorMapper.toQuestionPresentedDto(selectedRandomQuestion, enrollmentDto.getEnrollmentId());
     }
-
     
     public ResponseResultDto answerQuestion(AnswerQuestionForm answerForm) {
+
         QuestionDto question  = this.questionService.getById(answerForm.getQuestionId());
         Enrollment enrollment = this.enrollmentService.getEntityById(answerForm.getEnrollmentId());
         ResponseResultDto result = new ResponseResultDto();
@@ -96,16 +59,29 @@ public class EvaluatorService {
         result.setCorrectAlternative(this.getCorrectAlternative(question));
 
         if ( question.getCorrectAlternative() == answerForm.getSelectedAlternative()) {
-
-            this.responseReward(enrollment.getQtable().getQTableId(), true);
-            result.setScore(this.updateEnrollmentScore(enrollment, true));
-            result.setCorrectResponse(true);
+            result = this.registerCurrectAnswer(result, enrollment);
         } else {
-
-            this.responseReward(enrollment.getQtable().getQTableId(), false);
-            result.setScore(this.updateEnrollmentScore(enrollment, false));
-            result.setCorrectResponse(false);
+            result = this.registerWrongAnswer(result, enrollment);
         }
+
+        int qlearningState = this.returnLevel(result.getScore());
+        this.qtableService.changeCurrentState(enrollment.getQtable().getQTableId(), qlearningState);
+
+        return result;
+    }
+
+    private ResponseResultDto registerCurrectAnswer(ResponseResultDto result, Enrollment enrollment) {
+        this.responseReward(enrollment.getQtable().getQTableId(), true);
+        result.setScore(this.updateEnrollmentScore(enrollment, true));
+        result.setCorrectResponse(true);
+        
+        return result;
+    }
+
+    private ResponseResultDto registerWrongAnswer(ResponseResultDto result, Enrollment enrollment) {
+        this.responseReward(enrollment.getQtable().getQTableId(), false);
+        result.setScore(this.updateEnrollmentScore(enrollment, false));
+        result.setCorrectResponse(false);
         return result;
     }
 
@@ -136,13 +112,12 @@ public class EvaluatorService {
     }
 
     private int returnLevel(Double score) {
-        if ( score < 4 ) {
+        if ( score < 4 ) 
             return 0;
-        } else if ( score >= 4 && score < 7 ) {
+        else if ( score >= 4 && score < 7 ) 
             return 1;
-        } else {
+        else 
             return 2;
-        }
     }
 
 
