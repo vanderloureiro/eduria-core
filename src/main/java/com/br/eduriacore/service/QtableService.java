@@ -26,28 +26,16 @@ public class QtableService {
     }
 
     public Qtable createDefaultQtable(int qtdExploration, int initialState) {
-        Qtable table = new Qtable();
-        table.setBEGINNER_EASY(0.0);
-        table.setBEGINNER_MEDIUM(0.0);
-        table.setBEGINNER_HARD(0.0);
-        table.setINTERMEDIATE_EASY(0.0);
-        table.setINTERMEDIATE_MEDIUM(0.0);
-        table.setINTERMEDIATE_HARD(0.0);
-        table.setADVANCED_EASY(0.0);
-        table.setADVANCED_MEDIUM(0.0);
-        table.setADVANCED_HARD(0.0);
-
-        table.setQtdRandom(qtdExploration);
-        table.setCurrentState(StateEnum.BEGINNER);
+        Qtable table = new Qtable(qtdExploration);
         return this.repository.save(table);
     }
 
     public Integer getBestAction(Long id) {
         Qtable qtable = this.getById(id);
-        if (qtable.getCurrentRandom() > qtable.getQtdRandom()) {
+        if (qtable.getCurrentExploration() > qtable.getQtdExploration()) {
             return this.getBestActionIndex(qtable);
         } else {
-            qtable.setCurrentRandom(qtable.getCurrentRandom() + 1);
+            qtable.setCurrentExploration(qtable.getCurrentExploration() + 1);
             this.repository.save(qtable);
             Random generator = new Random();
             return generator.nextInt(3);

@@ -43,11 +43,11 @@ public class Qtable {
     @Column(nullable=false)
     private Double ADVANCED_HARD;
 
-    @Column(name="qtd_random", nullable=false)
-    private int qtdRandom;
+    @Column(name="qtd_exploration", nullable=false)
+    private int qtdExploration;
 
-    @Column(name="current_random", nullable=false)
-    private int currentRandom;
+    @Column(name="current_exploration", nullable=false)
+    private int currentExploration;
 
     @Enumerated(EnumType.STRING)
     @Column(name="current_state", nullable=false)
@@ -55,5 +55,19 @@ public class Qtable {
 
     @OneToOne(mappedBy = "qtable")
     private Enrollment enrollment;
+
+    public Qtable(int qtdExploration) {
+        this.BEGINNER_EASY       = 0.0;
+        this.BEGINNER_MEDIUM     = 0.0;
+        this.BEGINNER_HARD       = 0.0;
+        this.INTERMEDIATE_EASY   = 0.0;
+        this.INTERMEDIATE_MEDIUM = 0.0;
+        this.INTERMEDIATE_HARD   = 0.0;
+        this.ADVANCED_EASY       = 0.0;
+        this.ADVANCED_MEDIUM     = 0.0;
+        this.ADVANCED_HARD       = 0.0;
+        this.qtdExploration      = qtdExploration;
+        this.currentState        = StateEnum.BEGINNER;
+    }
 
 }
