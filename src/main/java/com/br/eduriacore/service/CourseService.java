@@ -40,10 +40,7 @@ public class CourseService {
 
     public Course getEntityById(Long id) {
         Optional<Course> course = this.repository.findById(id);
-        if (course.isPresent()) {
-            return course.get();
-        }
-        throw new NotFoundException("Course not found");
+        return course.orElseThrow(() -> new NotFoundException("Course not found"));
     }
 
     public Page<CourseDto> get(Pageable pagination) {

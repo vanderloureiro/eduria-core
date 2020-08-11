@@ -71,9 +71,6 @@ public class QuestionService {
 
     public Question getEntityById(Long id) {
         Optional<Question> question = this.repository.findById(id);
-        if (question.isPresent()) {
-            return question.get();
-        }
-        throw new NotFoundException("Question not found");
+        return question.orElseThrow(() -> new NotFoundException("Question not found"));
     }
 }

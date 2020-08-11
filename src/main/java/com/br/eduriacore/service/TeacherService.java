@@ -42,8 +42,7 @@ public class TeacherService {
 
     public Teacher getEntityById(Long id) {
         Optional<Teacher> teacher = this.repository.findById(id);
-        if (teacher.isPresent()) return teacher.get(); 
-        throw new NotFoundException("Teacher not found");
+        return teacher.orElseThrow(() -> new NotFoundException("Teacher not found"));
     }
 
     public TeacherDto update(TeacherDto teacherDto, Long id) {

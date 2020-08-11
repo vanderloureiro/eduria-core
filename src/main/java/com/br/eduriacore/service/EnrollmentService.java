@@ -63,10 +63,7 @@ public class EnrollmentService {
 
     public Enrollment getEntityById(Long id) {
         Optional<Enrollment> enrollment = this.repository.findById(id);
-        if (enrollment.isPresent()) {
-            return enrollment.get();
-        }
-        throw new NotFoundException("Enrollment not found");
+        return enrollment.orElseThrow(() -> new NotFoundException("Enrollment not found"));
     }
 
     public void delete(Long id) {

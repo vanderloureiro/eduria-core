@@ -54,10 +54,7 @@ public class StudentService {
 
     public Student getEntityById(Long id) {
         Optional<Student> student = this.repository.findById(id);
-        if (student.isPresent()) {
-            return student.get();
-        }
-        throw new NotFoundException("Student not found");
+        return student.orElseThrow(() -> new NotFoundException("Student not found"));
     }
 
 }
