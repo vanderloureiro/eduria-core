@@ -100,10 +100,12 @@ public class EvaluatorService {
 
     private Double updateEnrollmentScore(Enrollment enrollment, boolean isRightAnswer) {
         if (isRightAnswer && enrollment.getScore() < 10) {
+
             Double newScore = enrollment.getScore() + 1;
             enrollment.setScore(newScore);
             enrollment.setLevel(this.returnLevel(newScore));
         } else if ( !isRightAnswer && enrollment.getScore() > 0) {
+            
             Double newScore = enrollment.getScore() - 1;
             enrollment.setScore(newScore);
             enrollment.setLevel(this.returnLevel(newScore));

@@ -35,7 +35,7 @@ public class Enrollment {
     @JoinColumn(name = "course_id")
     private Course course;
     
-    @Enumerated(EnumType.ORDINAL)
+    @Enumerated(EnumType.STRING)
     private StateEnum level;
 
     private Double score;

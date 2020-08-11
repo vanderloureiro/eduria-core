@@ -27,18 +27,18 @@ public class QtableService {
 
     public Qtable createDefaultQtable(int qtdExploration, int initialState) {
         Qtable table = new Qtable();
-        table.setL1C1(0.0);
-        table.setL1C2(0.0);
-        table.setL1C3(0.0);
-        table.setL2C1(0.0);
-        table.setL2C2(0.0);
-        table.setL2C3(0.0);
-        table.setL3C1(0.0);
-        table.setL3C2(0.0);
-        table.setL3C3(0.0);
+        table.setBEGINNER_EASY(0.0);
+        table.setBEGINNER_MEDIUM(0.0);
+        table.setBEGINNER_HARD(0.0);
+        table.setINTERMEDIATE_EASY(0.0);
+        table.setINTERMEDIATE_MEDIUM(0.0);
+        table.setINTERMEDIATE_HARD(0.0);
+        table.setADVANCED_EASY(0.0);
+        table.setADVANCED_MEDIUM(0.0);
+        table.setADVANCED_HARD(0.0);
 
         table.setQtdRandom(qtdExploration);
-        table.setIndexCurrentState(initialState);
+        table.setCurrentState(StateEnum.BEGINNER);
         return this.repository.save(table);
     }
 
@@ -55,23 +55,23 @@ public class QtableService {
     }
 
     private Integer getBestActionIndex(Qtable qtable) {
-        if (qtable.getIndexCurrentState() == 0) {
+        if (qtable.getIndexCurrentState() == 1)
             return this.returnBestActionIndex(qtable.getL1C1(), qtable.getL1C2(), qtable.getL1C3());
-        } else if (qtable.getIndexCurrentState() == 1) {
+        else if (qtable.getIndexCurrentState() == 2) 
             return this.returnBestActionIndex(qtable.getL2C1(), qtable.getL2C2(), qtable.getL2C3());
-        } else {
+        else 
             return this.returnBestActionIndex(qtable.getL3C1(), qtable.getL3C2(), qtable.getL3C3());
-        }
+        
     }
 
     private Double getBestActionNextState(Qtable qtable) {
-        if (qtable.getIndexCurrentState() == 0) {
+        if (qtable.getIndexCurrentState() == 1) 
             return this.returnBestActionValue(qtable.getL2C1(), qtable.getL2C2(), qtable.getL2C3());
-        } else if (qtable.getIndexCurrentState() == 1) {
+        else if (qtable.getIndexCurrentState() == 2) 
             return this.returnBestActionValue(qtable.getL3C1(), qtable.getL3C2(), qtable.getL3C3());
-        } else {
+        else 
             return this.returnBestActionValue(qtable.getL1C1(), qtable.getL1C2(), qtable.getL1C3());
-        }
+        
     }
 
     private Double returnBestActionValue(Double col1Value, Double col2Value, Double col3Value) {
@@ -80,9 +80,9 @@ public class QtableService {
     }
 
     private int returnBestActionIndex(Double col1Value, Double col2Value, Double col3Value) {
-        int bestAction = 0;
-        if (col2Value > col1Value) bestAction = 1;
-        if (col3Value > col2Value) bestAction = 2;
+        int bestAction = 1;
+        if (col2Value > col1Value) bestAction = 2;
+        if (col3Value > col2Value) bestAction = 3;
         return bestAction;
     }
 
@@ -110,6 +110,7 @@ public class QtableService {
         }
     }
 
+    // refatorar
     private Qtable updateNewValue(Qtable qtable, Double newValue) {
         int bestActionIndex = this.getBestAction(qtable.getQTableId());
         if (qtable.getIndexCurrentState() == 0){
@@ -130,23 +131,13 @@ public class QtableService {
 
     public Qtable changeCurrentState(Long qtableId, StateEnum newState) {
         Qtable qtable = this.getById(qtableId);
-        qtable.setIndexCurrentState(this.convertEnumToIndex(newState));
+        qtable.setCurrentState(newState);
         return this.repository.save(qtable);
-    }
-
-    private int convertEnumToIndex(StateEnum state) {
-        if (state == StateEnum.BEGINNER) {
-            return 0;
-        }
-        return 2;
     }
 
     public Qtable getById(Long id) {
         Optional<Qtable> table = this.repository.findById(id);
-        if (table.isPresent()) {
-            return table.get();
-        }
-        throw new NotFoundException("Qtable not found");
+        return table.orElseThrow(() -> new NotFoundException("Qtable not found"));
     }
 
 }

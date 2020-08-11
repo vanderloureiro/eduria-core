@@ -2,11 +2,15 @@ package com.br.eduriacore.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import com.br.eduriacore.model.enums.StateEnum;
 
 import lombok.Data;
 
@@ -21,34 +25,33 @@ public class Qtable {
     private Long qTableId;
 
     @Column(nullable=false)
-    private Double L1C1;
+    private Double BEGINNER_EASY;
     @Column(nullable=false)
-    private Double L1C2;
+    private Double BEGINNER_MEDIUM;
     @Column(nullable=false)
-    private Double L1C3;
-
+    private Double BEGINNER_HARD;
     @Column(nullable=false)
-    private Double L2C1;
+    private Double INTERMEDIATE_EASY;
     @Column(nullable=false)
-    private Double L2C2;
+    private Double INTERMEDIATE_MEDIUM;
     @Column(nullable=false)
-    private Double L2C3;
-
+    private Double INTERMEDIATE_HARD;
     @Column(nullable=false)
-    private Double L3C1;
+    private Double ADVANCED_EASY;
     @Column(nullable=false)
-    private Double L3C2;
+    private Double ADVANCED_MEDIUM;
     @Column(nullable=false)
-    private Double L3C3;
+    private Double ADVANCED_HARD;
 
     @Column(name="qtd_random", nullable=false)
     private int qtdRandom;
 
-    @Column(name="index_current_state", nullable=false)
-    private int indexCurrentState;
-
     @Column(name="current_random", nullable=false)
     private int currentRandom;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name="current_state", nullable=false)
+    private StateEnum currentState;
 
     @OneToOne(mappedBy = "qtable")
     private Enrollment enrollment;

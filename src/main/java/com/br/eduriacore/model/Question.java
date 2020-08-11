@@ -49,7 +49,7 @@ public class Question {
     @Column(name = "correct_alternative", nullable = false)
     private int correctAlternative;
 
-    @Enumerated(EnumType.ORDINAL)
+    @Enumerated(EnumType.STRING)
     @Column(name = "question_level", nullable = false)
     private LevelQuestionEnum questionLevel;
  
