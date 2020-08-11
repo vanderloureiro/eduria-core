@@ -1,5 +1,7 @@
 package com.br.eduriacore.dto;
 
+import com.br.eduriacore.model.enums.StateEnum;
+
 import lombok.Data;
 
 @Data
@@ -9,7 +11,7 @@ public class EnrollmentDto {
     private Long studentId;
     private Long courseId;
     private Long qtableId;
-    private int level;
+    private StateEnum level;
     private Double score;
 
 }

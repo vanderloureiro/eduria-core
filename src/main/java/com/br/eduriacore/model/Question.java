@@ -2,12 +2,16 @@ package com.br.eduriacore.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.br.eduriacore.model.enums.LevelQuestionEnum;
 
 import lombok.Data;
 
@@ -45,8 +49,8 @@ public class Question {
     @Column(name = "correct_alternative", nullable = false)
     private int correctAlternative;
 
+    @Enumerated(EnumType.ORDINAL)
     @Column(name = "question_level", nullable = false)
-    private int questionLevel;
-
+    private LevelQuestionEnum questionLevel;
  
 }

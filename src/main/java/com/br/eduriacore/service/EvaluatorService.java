@@ -10,7 +10,7 @@ import com.br.eduriacore.dto.ResponseResultDto;
 import com.br.eduriacore.form.AnswerQuestionForm;
 import com.br.eduriacore.mapper.EvaluatorMapper;
 import com.br.eduriacore.model.Enrollment;
-import com.br.eduriacore.model.Qtable;
+import com.br.eduriacore.model.enums.StateEnum;
 
 import org.springframework.stereotype.Service;
 
@@ -26,16 +26,11 @@ public class EvaluatorService {
     public EvaluatorService(QtableService qtableService, EvaluatorMapper evaluatorMapper,
             EnrollmentService enrollmentService, QuestionService questionService,
             RewardPolicyService rewardPolicyService) {
-        this.qtableService = qtableService;
-        this.evaluatorMapper = evaluatorMapper;
-        this.enrollmentService = enrollmentService;
-        this.questionService = questionService;
+        this.qtableService       = qtableService;
+        this.evaluatorMapper     = evaluatorMapper;
+        this.enrollmentService   = enrollmentService;
+        this.questionService     = questionService;
         this.rewardPolicyService = rewardPolicyService;
-    }
-
-    private Qtable responseReward(Long idQtable, boolean isCorrectResponse) {
-        double reward = isCorrectResponse ? 1 : -1;
-        return this.qtableService.applyReinforcement(idQtable, reward);
     }
 
     public QuestionPresentedDto presentNewQuestion(Long enrollmentId) {
@@ -54,9 +49,10 @@ public class EvaluatorService {
     
     public ResponseResultDto answerQuestion(AnswerQuestionForm answerForm) {
 
-        QuestionDto question  = this.questionService.getById(answerForm.getQuestionId());
-        Enrollment enrollment = this.enrollmentService.getEntityById(answerForm.getEnrollmentId());
+        QuestionDto question     = this.questionService.getById(answerForm.getQuestionId());
+        Enrollment enrollment    = this.enrollmentService.getEntityById(answerForm.getEnrollmentId());
         ResponseResultDto result = new ResponseResultDto();
+
         result.setEnrollmentId(enrollment.getEnrollmentId());
         result.setQuestionId(question.getQuestionId());
         result.setCorrectAlternative(this.getCorrectAlternative(question));
@@ -67,22 +63,23 @@ public class EvaluatorService {
             result = this.registerWrongAnswer(result, enrollment);
         }
 
-        int qlearningState = this.returnLevel(result.getScore());
+        StateEnum qlearningState = this.returnLevel(result.getScore());
         this.qtableService.changeCurrentState(enrollment.getQtable().getQTableId(), qlearningState);
 
         return result;
     }
 
     private ResponseResultDto registerCurrectAnswer(ResponseResultDto result, Enrollment enrollment) {
-        this.responseReward(enrollment.getQtable().getQTableId(), true);
+        double reward = this.rewardPolicyService.findReward(enrollment, true);
+        this.qtableService.applyReinforcement(enrollment.getQtable().getQTableId(), reward);
         result.setScore(this.updateEnrollmentScore(enrollment, true));
         result.setCorrectResponse(true);
-        
         return result;
     }
 
     private ResponseResultDto registerWrongAnswer(ResponseResultDto result, Enrollment enrollment) {
-        this.responseReward(enrollment.getQtable().getQTableId(), false);
+        double reward = this.rewardPolicyService.findReward(enrollment, false);
+        this.qtableService.applyReinforcement(enrollment.getQtable().getQTableId(), reward);
         result.setScore(this.updateEnrollmentScore(enrollment, false));
         result.setCorrectResponse(false);
         return result;
@@ -114,13 +111,13 @@ public class EvaluatorService {
         return this.enrollmentService.updateEnrollment(enrollment).getScore();
     }
 
-    private int returnLevel(Double score) {
+    private StateEnum returnLevel(Double score) {
         if ( score < 4 ) 
-            return 0;
+            return StateEnum.BEGINNER;
         else if ( score >= 4 && score < 7 ) 
-            return 1;
+            return StateEnum.INTERMEDIATE;
         else 
-            return 2;
+            return StateEnum.ADVANCED;
     }
 
 

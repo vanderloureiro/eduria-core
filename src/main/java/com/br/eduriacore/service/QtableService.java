@@ -8,6 +8,7 @@ import java.util.Random;
 
 import com.br.eduriacore.exception.NotFoundException;
 import com.br.eduriacore.model.Qtable;
+import com.br.eduriacore.model.enums.StateEnum;
 import com.br.eduriacore.repository.QtableRepository;
 
 import org.springframework.stereotype.Service;
@@ -127,10 +128,17 @@ public class QtableService {
         return this.repository.save(qtable);
     }
 
-    public Qtable changeCurrentState(Long qtableId, int newState) {
+    public Qtable changeCurrentState(Long qtableId, StateEnum newState) {
         Qtable qtable = this.getById(qtableId);
-        qtable.setIndexCurrentState(newState);
+        qtable.setIndexCurrentState(this.convertEnumToIndex(newState));
         return this.repository.save(qtable);
+    }
+
+    private int convertEnumToIndex(StateEnum state) {
+        if (state == StateEnum.BEGINNER) {
+            return 0;
+        }
+        return 2;
     }
 
     public Qtable getById(Long id) {

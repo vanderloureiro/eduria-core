@@ -1,5 +1,7 @@
 package com.br.eduriacore.dto;
 
+import com.br.eduriacore.model.enums.LevelQuestionEnum;
+
 import lombok.Data;
 
 @Data
@@ -14,6 +16,6 @@ public class QuestionPresentedDto {
     private String alternative2;
     private String alternative3;
     private String alternative4;
-    private int questionLevel;
+    private LevelQuestionEnum questionLevel;
 
 }
