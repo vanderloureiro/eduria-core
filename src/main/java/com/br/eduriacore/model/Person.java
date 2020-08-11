@@ -23,7 +23,7 @@ public abstract class Person {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false, length = 40)
+    @Column(nullable = false, length = 40, unique = true)
     private String email;
 
     @Column(nullable = false, length = 40)

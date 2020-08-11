@@ -21,13 +21,16 @@ public class EvaluatorService {
     private EvaluatorMapper evaluatorMapper;
     private QuestionService questionService;
     private EnrollmentService enrollmentService;
+    private RewardPolicyService rewardPolicyService;
 
     public EvaluatorService(QtableService qtableService, EvaluatorMapper evaluatorMapper,
-            EnrollmentService enrollmentService, QuestionService questionService) {
+            EnrollmentService enrollmentService, QuestionService questionService,
+            RewardPolicyService rewardPolicyService) {
         this.qtableService = qtableService;
         this.evaluatorMapper = evaluatorMapper;
         this.enrollmentService = enrollmentService;
         this.questionService = questionService;
+        this.rewardPolicyService = rewardPolicyService;
     }
 
     private Qtable responseReward(Long idQtable, boolean isCorrectResponse) {
