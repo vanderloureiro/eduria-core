@@ -11,7 +11,7 @@ public class EnrollmentDto {
     private Long studentId;
     private Long courseId;
     private Long qtableId;
-    private StateEnum level;
+    private StateEnum state;
     private Double score;
 
 }
