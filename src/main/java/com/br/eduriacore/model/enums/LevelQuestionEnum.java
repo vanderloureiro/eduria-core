@@ -6,7 +6,4 @@ public enum LevelQuestionEnum {
     MEDIUM,
     HARD;
 
-    public static LevelQuestionEnum getLevel() {
-        return null;
-    }
 }
