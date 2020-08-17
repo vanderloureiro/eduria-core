@@ -52,5 +52,18 @@ public class Question {
     @Enumerated(EnumType.STRING)
     @Column(name = "question_level", nullable = false)
     private LevelQuestionEnum questionLevel;
+
+    public String getCorrectAlternativeToString() {
+        switch (this.correctAlternative) {
+            case 1:
+                return "1 - " + this.alternative1;
+            case 2:
+                return "2 - " + this.alternative2;
+            case 3:
+                return "3 - " + this.alternative3;
+            default:
+                return "4 - " + this.alternative4;
+        }
+    }
  
 }

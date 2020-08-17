@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.br.eduriacore.model.enums.LevelQuestionEnum;
 import com.br.eduriacore.model.enums.StateEnum;
 
 import lombok.Data;
@@ -19,6 +20,20 @@ import lombok.Data;
 @Table(name = "q_table")
 public class Qtable {
  
+    public Qtable(int qtdExploration) {
+        this.BEGINNER_EASY       = 0.0;
+        this.BEGINNER_MEDIUM     = 0.0;
+        this.BEGINNER_HARD       = 0.0;
+        this.INTERMEDIATE_EASY   = 0.0;
+        this.INTERMEDIATE_MEDIUM = 0.0;
+        this.INTERMEDIATE_HARD   = 0.0;
+        this.ADVANCED_EASY       = 0.0;
+        this.ADVANCED_MEDIUM     = 0.0;
+        this.ADVANCED_HARD       = 0.0;
+        this.qtdExploration      = qtdExploration;
+        this.currentState        = StateEnum.BEGINNER;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="q_table_id")
@@ -56,18 +71,20 @@ public class Qtable {
     @OneToOne(mappedBy = "qtable")
     private Enrollment enrollment;
 
-    public Qtable(int qtdExploration) {
-        this.BEGINNER_EASY       = 0.0;
-        this.BEGINNER_MEDIUM     = 0.0;
-        this.BEGINNER_HARD       = 0.0;
-        this.INTERMEDIATE_EASY   = 0.0;
-        this.INTERMEDIATE_MEDIUM = 0.0;
-        this.INTERMEDIATE_HARD   = 0.0;
-        this.ADVANCED_EASY       = 0.0;
-        this.ADVANCED_MEDIUM     = 0.0;
-        this.ADVANCED_HARD       = 0.0;
-        this.qtdExploration      = qtdExploration;
-        this.currentState        = StateEnum.BEGINNER;
+    public LevelQuestionEnum getBestActionByCurrentState() {
+        if (this.currentState == StateEnum.BEGINNER) {
+            return this.getBestAction(this.BEGINNER_EASY, this.BEGINNER_MEDIUM, this.BEGINNER_HARD);
+        } else if (this.currentState == StateEnum.INTERMEDIATE) {
+            return this.getBestAction(this.INTERMEDIATE_EASY, this.INTERMEDIATE_MEDIUM, this.INTERMEDIATE_HARD);
+        } else {
+            return this.getBestAction(this.ADVANCED_EASY, this.ADVANCED_MEDIUM, this.ADVANCED_HARD);
+        }
+    }
+
+    private LevelQuestionEnum getBestAction(Double action1, Double action2, Double action3) {
+        if ( action1 >= action2 && action1 >= action3) return LevelQuestionEnum.EASY;
+        if ( action2 >= action1 && action2 >= action3) return LevelQuestionEnum.MEDIUM;
+        return LevelQuestionEnum.HARD;
     }
 
 }

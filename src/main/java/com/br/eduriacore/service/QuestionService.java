@@ -9,6 +9,7 @@ import com.br.eduriacore.exception.NotFoundException;
 import com.br.eduriacore.mapper.QuestionMapper;
 import com.br.eduriacore.model.Course;
 import com.br.eduriacore.model.Question;
+import com.br.eduriacore.model.enums.LevelQuestionEnum;
 import com.br.eduriacore.repository.QuestionRepository;
 
 import org.springframework.data.domain.Page;
@@ -57,7 +58,7 @@ public class QuestionService {
         throw new NotFoundException("Question not found");
     }
 
-    public List<QuestionDto> getQuestionByLevelAndCourse(int level, Long courseId) {
+    public List<QuestionDto> getQuestionByLevelAndCourse(LevelQuestionEnum level, Long courseId) {
         return this.repository.findAllByLevelAndCourse(level, courseId).stream().map(
             questionEntity -> {
                 return this.mapper.toDto(questionEntity);

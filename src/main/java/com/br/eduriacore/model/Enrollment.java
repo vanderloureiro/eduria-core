@@ -36,7 +36,7 @@ public class Enrollment {
     private Course course;
     
     @Enumerated(EnumType.STRING)
-    private StateEnum level;
+    private StateEnum state;
 
     private Double score;
 

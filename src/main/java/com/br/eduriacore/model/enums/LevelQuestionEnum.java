@@ -4,5 +4,6 @@ public enum LevelQuestionEnum {
     
     EASY,
     MEDIUM,
-    HARD
+    HARD;
+
 }

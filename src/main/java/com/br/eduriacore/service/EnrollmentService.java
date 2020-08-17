@@ -43,7 +43,7 @@ public class EnrollmentService {
         enrollment.setCourse(course);
         enrollment.setStudent(student);
         enrollment.setScore(0.0);
-        enrollment.setLevel(StateEnum.BEGINNER);
+        enrollment.setState(StateEnum.BEGINNER);
         enrollment.setQtable(this.qtableService.createDefaultQtable(20, 0));
 
         return this.mapper.toDto(this.repository.save(enrollment));
