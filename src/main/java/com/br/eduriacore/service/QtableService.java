@@ -40,7 +40,7 @@ public class QtableService {
     }
 
     public Qtable applyReinforcement(Long qtableId, Double reward) {
-        Qtable qtable  = this.getById(qtableId);
+        Qtable qtable = this.getById(qtableId);
         qtable = qtable.applyReinforcement(reward);
         return this.repository.save(qtable);
     }

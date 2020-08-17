@@ -88,7 +88,8 @@ public class Qtable {
     public Qtable applyReinforcement(Double reward) {
 
         Double bestActionActual    = this.getBestActionValueByState(this.currentState);
-        Double bestActionNextState = this.getBestActionValueByState(this.getNextState());
+        Double bestActionNextState = this.getBestActionValueByState(
+            StateEnum.getNextState(this.currentState));
 
         // Q(s, t) = Q(s, t) + alpha * (r + gamma * max(s+1, a) - Q(s, t))
         Double newValue = bestActionActual + this.ALPHA * 
@@ -96,12 +97,6 @@ public class Qtable {
 
         this.setBestAction(newValue);
         return this;
-    }
-
-    private StateEnum getNextState() {
-        if (this.currentState == StateEnum.BEGINNER) return StateEnum.INTERMEDIATE;
-        if (this.currentState == StateEnum.INTERMEDIATE) return StateEnum.ADVANCED; 
-        return StateEnum.BEGINNER;
     }
 
     private void setBestAction(Double value) {

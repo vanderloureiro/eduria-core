@@ -15,4 +15,10 @@ public enum StateEnum {
             return StateEnum.ADVANCED;
     }
 
+    public static StateEnum getNextState(StateEnum state) {
+        if (state == StateEnum.BEGINNER) return StateEnum.INTERMEDIATE;
+        if (state == StateEnum.INTERMEDIATE) return StateEnum.ADVANCED; 
+        return StateEnum.BEGINNER;
+    }
+
 }
