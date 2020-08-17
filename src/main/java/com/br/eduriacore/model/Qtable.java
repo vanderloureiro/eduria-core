@@ -1,5 +1,9 @@
 package com.br.eduriacore.model;
 
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -9,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.br.eduriacore.model.enums.LevelQuestionEnum;
 import com.br.eduriacore.model.enums.StateEnum;
@@ -19,6 +24,11 @@ import lombok.Data;
 @Entity
 @Table(name = "q_table")
 public class Qtable {
+
+    @Transient
+    private final double ALPHA = 0.5;
+    @Transient
+    private final double GAMMA = 0.5;
  
     public Qtable(int qtdExploration) {
         this.BEGINNER_EASY       = 0.0;
@@ -86,5 +96,41 @@ public class Qtable {
         if ( action2 >= action1 && action2 >= action3) return LevelQuestionEnum.MEDIUM;
         return LevelQuestionEnum.HARD;
     }
+
+    public Double getBestActionValueByState(StateEnum state) {
+        if (state == StateEnum.BEGINNER) {
+            return this.getBestActionValue(this.BEGINNER_EASY, this.BEGINNER_MEDIUM, this.BEGINNER_HARD);
+        } else if (state == StateEnum.INTERMEDIATE) {
+            return this.getBestActionValue(this.INTERMEDIATE_EASY, this.INTERMEDIATE_MEDIUM, this.INTERMEDIATE_HARD);
+        } else {
+            return this.getBestActionValue(this.ADVANCED_EASY, this.ADVANCED_MEDIUM, this.ADVANCED_HARD);
+        }
+    }
+    
+    private Double getBestActionValue(Double col1Value, Double col2Value, Double col3Value) {
+        List<Double> array = Arrays.asList(col1Value, col2Value, col3Value);
+        return array.stream().max(Comparator.naturalOrder()).get();
+    }
+
+    public Qtable applyReinforcement(Double reward) {
+
+        Double bestActionActual    = this.getBestActionValueByState(this.currentState);
+        Double bestActionNextState = this.getBestActionValueByState(this.getNextState());
+
+        // Q(s, t) = Q(s, t) + alpha * (r + gamma * max(s+1, a) - Q(s, t))
+        Double newValue = bestActionActual + this.ALPHA * 
+            (reward + this.GAMMA * bestActionNextState - bestActionActual);
+
+        // todo
+        // create set method
+        return this;
+    }
+
+    private StateEnum getNextState() {
+        if (this.currentState == StateEnum.BEGINNER) return StateEnum.INTERMEDIATE;
+        if (this.currentState == StateEnum.INTERMEDIATE) return StateEnum.ADVANCED; 
+        return StateEnum.BEGINNER;
+    }
+
 
 }

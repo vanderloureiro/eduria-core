@@ -1,8 +1,6 @@
 package com.br.eduriacore.service;
 
 import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
@@ -16,9 +14,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class QtableService {
-
-    private final double ALPHA = 0.5;
-    private final double GAMMA = 0.5;
 
     private QtableRepository repository;
 
@@ -34,7 +29,7 @@ public class QtableService {
     public LevelQuestionEnum getBestAction(Long id) {
         Qtable qtable = this.getById(id);
         if (qtable.getCurrentExploration() > qtable.getQtdExploration()) {
-            return qtable.getBestAction();
+            return qtable.getBestActionByCurrentState();
         } else {
             qtable.setCurrentExploration(qtable.getCurrentExploration() + 1);
             this.repository.save(qtable);
@@ -44,23 +39,10 @@ public class QtableService {
         }
     }
 
-    private Double returnBestActionValue(Double col1Value, Double col2Value, Double col3Value) {
-        List<Double> array = Arrays.asList(col1Value, col2Value, col3Value);
-        return array.stream().max(Comparator.naturalOrder()).get();
-    }
-
-
     public Qtable applyReinforcement(Long qtableId, Double reward) {
         Qtable qtable  = this.getById(qtableId);
-        int bestActionIndex = this.getBestActionIndex(qtable);
-        Double bestActionNextState = this.getBestActionNextState(qtable);
-        Double bestActionActual    = this.getMatrixValue(qtable, qtable.getIndexCurrentState(), bestActionIndex);
-
-        // Q(s, t) = Q(s, t) + alpha * (r + gamma * max(s+1, a) - Q(s, t))
-        Double newValue = bestActionActual + this.ALPHA * 
-            (reward + this.GAMMA * bestActionNextState - bestActionActual);
-        
-        return this.updateNewValue(qtable, newValue);
+        qtable = qtable.applyReinforcement(reward);
+        return this.repository.save(qtable);
     }
 
     public Qtable changeCurrentState(Long qtableId, StateEnum newState) {
