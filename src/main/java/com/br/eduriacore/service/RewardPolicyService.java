@@ -34,13 +34,16 @@ public class RewardPolicyService {
         rewardPolicy.put("WRONG_ADVANCED_HARD",       -0.1);
     }
 
-    public double findReward(Enrollment enrollment, boolean isCorrectResponse) {
+    public Double findReward(Enrollment enrollment, boolean isCorrectResponse) {
         String stringFilter = this.generateStringFilter(enrollment, isCorrectResponse);
         return rewardPolicy.get(stringFilter);
     }
 
     private String generateStringFilter(Enrollment enrollment, boolean isCorrectResponse) {
-        return null;
+        String filter = isCorrectResponse ? "CORRECT_" : "WRONG_";
+        filter += enrollment.getState() + "_";
+        filter += enrollment.getQtable().getBestActionByCurrentState();
+        return filter;
     }
     
 }

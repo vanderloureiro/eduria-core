@@ -121,8 +121,7 @@ public class Qtable {
         Double newValue = bestActionActual + this.ALPHA * 
             (reward + this.GAMMA * bestActionNextState - bestActionActual);
 
-        // todo
-        // create set method
+        this.setBestAction(newValue);
         return this;
     }
 
@@ -130,6 +129,35 @@ public class Qtable {
         if (this.currentState == StateEnum.BEGINNER) return StateEnum.INTERMEDIATE;
         if (this.currentState == StateEnum.INTERMEDIATE) return StateEnum.ADVANCED; 
         return StateEnum.BEGINNER;
+    }
+
+    private void setBestAction(Double value) {
+        LevelQuestionEnum level = this.getBestActionByCurrentState();
+        if (this.currentState == StateEnum.BEGINNER) {
+            this.setBeginner(level, value);
+        } else if (this.currentState == StateEnum.INTERMEDIATE){
+            this.setIntermiate(level, value);
+        } else {
+            this.setAdvanced(level, value);
+        }
+    }
+
+    private void setBeginner(LevelQuestionEnum level, Double value) {
+        if (level == LevelQuestionEnum.EASY) this.BEGINNER_EASY = value;
+        if (level == LevelQuestionEnum.MEDIUM) this.BEGINNER_MEDIUM = value;
+        if (level == LevelQuestionEnum.HARD) this.BEGINNER_HARD = value;
+    }
+
+    private void setIntermiate(LevelQuestionEnum level, Double value) {
+        if (level == LevelQuestionEnum.EASY) this.INTERMEDIATE_EASY = value;
+        if (level == LevelQuestionEnum.MEDIUM) this.INTERMEDIATE_MEDIUM = value;
+        if (level == LevelQuestionEnum.HARD) this.INTERMEDIATE_HARD = value;
+    }
+
+    private void setAdvanced(LevelQuestionEnum level, Double value) {
+        if (level == LevelQuestionEnum.EASY) this.ADVANCED_EASY = value;
+        if (level == LevelQuestionEnum.MEDIUM) this.ADVANCED_MEDIUM = value;
+        if (level == LevelQuestionEnum.HARD) this.ADVANCED_HARD = value;
     }
 
 
