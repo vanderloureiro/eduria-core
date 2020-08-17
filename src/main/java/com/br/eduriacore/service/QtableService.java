@@ -49,7 +49,6 @@ public class QtableService {
             return this.returnBestActionIndex(qtable.getL2C1(), qtable.getL2C2(), qtable.getL2C3());
         else 
             return this.returnBestActionIndex(qtable.getL3C1(), qtable.getL3C2(), qtable.getL3C3());
-        
     }
 
     private Double getBestActionNextState(Qtable qtable) {
