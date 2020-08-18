@@ -21,6 +21,12 @@ import lombok.Data;
 @Table(name = "cell")
 public class Cell {
 
+    public Cell(StateEnum state, LevelQuestionEnum level, Double value) {
+        this.state = state;
+        this.level = level;
+        this.value = value;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="cell_id")
