@@ -1,5 +1,6 @@
 package com.br.eduriacore.model;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -33,15 +34,16 @@ public class Qtable {
     private final double GAMMA = 0.5;
  
     public Qtable(int qtdExploration) {
-        this.cells.add(new Cell(StateEnum.BEGINNER, LevelQuestionEnum.EASY, 0.0));
-        this.cells.add(new Cell(StateEnum.BEGINNER, LevelQuestionEnum.MEDIUM, 0.0));
-        this.cells.add(new Cell(StateEnum.BEGINNER, LevelQuestionEnum.HARD, 0.0));
-        this.cells.add(new Cell(StateEnum.INTERMEDIATE, LevelQuestionEnum.EASY, 0.0));
-        this.cells.add(new Cell(StateEnum.INTERMEDIATE, LevelQuestionEnum.MEDIUM, 0.0));
-        this.cells.add(new Cell(StateEnum.INTERMEDIATE, LevelQuestionEnum.HARD, 0.0));
-        this.cells.add(new Cell(StateEnum.ADVANCED, LevelQuestionEnum.EASY, 0.0));
-        this.cells.add(new Cell(StateEnum.ADVANCED, LevelQuestionEnum.MEDIUM, 0.0));
-        this.cells.add(new Cell(StateEnum.ADVANCED, LevelQuestionEnum.HARD, 0.0));
+        this.cells = new ArrayList<>();
+        this.cells.add(new Cell(StateEnum.BEGINNER, LevelQuestionEnum.EASY, 0.0, this));
+        this.cells.add(new Cell(StateEnum.BEGINNER, LevelQuestionEnum.MEDIUM, 0.0, this));
+        this.cells.add(new Cell(StateEnum.BEGINNER, LevelQuestionEnum.HARD, 0.0, this));
+        this.cells.add(new Cell(StateEnum.INTERMEDIATE, LevelQuestionEnum.EASY, 0.0, this));
+        this.cells.add(new Cell(StateEnum.INTERMEDIATE, LevelQuestionEnum.MEDIUM, 0.0, this));
+        this.cells.add(new Cell(StateEnum.INTERMEDIATE, LevelQuestionEnum.HARD, 0.0, this));
+        this.cells.add(new Cell(StateEnum.ADVANCED, LevelQuestionEnum.EASY, 0.0, this));
+        this.cells.add(new Cell(StateEnum.ADVANCED, LevelQuestionEnum.MEDIUM, 0.0, this));
+        this.cells.add(new Cell(StateEnum.ADVANCED, LevelQuestionEnum.HARD, 0.0, this));
         this.qtdExploration = qtdExploration;
         this.currentState   = StateEnum.BEGINNER;
     }

@@ -21,7 +21,7 @@ public class QtableService {
         this.repository = repository;
     }
 
-    public Qtable createDefaultQtable(int qtdExploration, int initialState) {
+    public Qtable createDefaultQtable(int qtdExploration) {
         Qtable table = new Qtable(qtdExploration);
         return this.repository.save(table);
     }

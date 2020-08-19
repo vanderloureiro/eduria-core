@@ -21,10 +21,11 @@ import lombok.Data;
 @Table(name = "cell")
 public class Cell {
 
-    public Cell(StateEnum state, LevelQuestionEnum level, Double value) {
-        this.state = state;
-        this.level = level;
-        this.value = value;
+    public Cell(StateEnum state, LevelQuestionEnum level, Double value, Qtable qtable) {
+        this.state  = state;
+        this.level  = level;
+        this.value  = value;
+        this.qtable = qtable;
     }
 
     @Id
