@@ -32,6 +32,8 @@ public class Qtable {
     private final double ALPHA = 0.5;
     @Transient
     private final double GAMMA = 0.5;
+
+    public Qtable() {}
  
     public Qtable(int qtdExploration) {
         this.cells = new ArrayList<>();
