@@ -59,9 +59,9 @@ public class EvaluatorService {
         result.setCorrectAlternative(question.getCorrectAlternativeToString());
 
         if ( question.getCorrectAlternative() == answerForm.getSelectedAlternative()) {
-            result = this.registerCurrectAnswer(result, enrollment);
+            result = this.registerCurrectAnswer(result, enrollment, question.getQuestionLevel());
         } else {
-            result = this.registerWrongAnswer(result, enrollment);
+            result = this.registerWrongAnswer(result, enrollment, question.getQuestionLevel());
         }
 
         StateEnum qlearningState = StateEnum.returnStateByScore(result.getScore());
@@ -70,17 +70,17 @@ public class EvaluatorService {
         return result;
     }
 
-    private ResponseResultDto registerCurrectAnswer(ResponseResultDto result, Enrollment enrollment) {
+    private ResponseResultDto registerCurrectAnswer(ResponseResultDto result, Enrollment enrollment, LevelQuestionEnum levelQuestion) {
         double reward = this.rewardPolicyService.findReward(enrollment, true);
-        this.qtableService.applyReinforcement(enrollment.getQtable().getQTableId(), reward);
+        this.qtableService.applyReinforcement(enrollment.getQtable().getQTableId(), reward, levelQuestion);
         result.setScore(this.updateEnrollmentScore(enrollment, true));
         result.setCorrectResponse(true);
         return result;
     }
 
-    private ResponseResultDto registerWrongAnswer(ResponseResultDto result, Enrollment enrollment) {
+    private ResponseResultDto registerWrongAnswer(ResponseResultDto result, Enrollment enrollment, LevelQuestionEnum levelQuestion) {
         double reward = this.rewardPolicyService.findReward(enrollment, false);
-        this.qtableService.applyReinforcement(enrollment.getQtable().getQTableId(), reward);
+        this.qtableService.applyReinforcement(enrollment.getQtable().getQTableId(), reward, levelQuestion);
         result.setScore(this.updateEnrollmentScore(enrollment, false));
         result.setCorrectResponse(false);
         return result;

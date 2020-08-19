@@ -39,9 +39,9 @@ public class QtableService {
         }
     }
 
-    public Qtable applyReinforcement(Long qtableId, Double reward) {
+    public Qtable applyReinforcement(Long qtableId, Double reward, LevelQuestionEnum levelQuestion) {
         Qtable qtable = this.getById(qtableId);
-        qtable = qtable.applyReinforcement(reward);
+        qtable = qtable.applyReinforcement(reward, levelQuestion);
         return this.repository.save(qtable);
     }
 

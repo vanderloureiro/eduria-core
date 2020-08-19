@@ -94,7 +94,7 @@ public class Qtable {
                     .get().getValue();
     }
     
-    public Qtable applyReinforcement(Double reward) {
+    public Qtable applyReinforcement(Double reward, LevelQuestionEnum levelQuestion){
 
         Double bestActionActual    = this.getBestActionValueByState(this.currentState);
         Double bestActionNextState = this.getBestActionValueByState(
@@ -104,14 +104,14 @@ public class Qtable {
         Double newValue = bestActionActual + this.ALPHA * 
             (reward + this.GAMMA * bestActionNextState - bestActionActual);
 
-        this.setBestAction(newValue);
+        this.setBestAction(newValue, levelQuestion);
         return this;
     }
 
-    private void setBestAction(Double value) {
-        LevelQuestionEnum level = this.getBestActionByCurrentState();
+    private void setBestAction(Double value, LevelQuestionEnum levelQuestion) {
         Cell cellFound = this.cells
-            .stream().filter(cell -> cell.getLevel() == level && cell.getState() == this.currentState)
+            .stream()
+            .filter(cell -> cell.getLevel() == levelQuestion && cell.getState() == this.currentState)
             .findFirst().get();
 
         cellFound.setValue(value);
