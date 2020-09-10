@@ -45,22 +45,22 @@ public class CourseService {
 
     public Page<CourseDto> get(Pageable pagination) {
         return this.repository.findAll(pagination).map( 
-        course -> {
-            return this.mapper.toDto(course);
-        });
+            course -> {
+                return this.mapper.toDto(course);
+            });
     }
 
     public CourseDto update(CourseDto courseDto, Long id) {
         Optional<Course> course = this.repository.findById(id);
         Teacher teacher = this.teacherService.getEntityById(courseDto.getTeacherId());
-        if (course.isPresent()) {
-            Course courseToSave = new Course();
-            courseToSave.setCourseName(courseDto.getCourseName());
-            courseToSave.setTeacher(teacher);
-            courseToSave.setCourseId(id);
-            return this.mapper.toDto(this.repository.save(courseToSave));
-        }
-        throw new NotFoundException("Course not found");
+        
+        course.orElseThrow(() -> new NotFoundException("Course not found"));
+
+        Course courseToSave = new Course();
+        courseToSave.setCourseName(courseDto.getCourseName());
+        courseToSave.setTeacher(teacher);
+        courseToSave.setCourseId(id);
+        return this.mapper.toDto(this.repository.save(courseToSave));
     }
 
     public void delete(Long id) {
