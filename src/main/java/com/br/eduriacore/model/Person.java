@@ -1,5 +1,7 @@
 package com.br.eduriacore.model;
 
+import java.time.LocalDate;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -18,18 +20,21 @@ public abstract class Person {
 
     @Id
     @GeneratedValue
-    private Long id;
+    protected Long id;
     
     @Column(nullable = false)
-    private String name;
+    protected String name;
 
     @Column(nullable = false, length = 40, unique = true)
-    private String email;
+    protected String email;
 
     @Column(nullable = false, length = 40)
-    private String password;
+    protected String password;
 
     @Column(length = 40)
-    private String phone;
+    protected String phone;
+
+    @Column(nullable = false)
+    protected LocalDate birthDate;
 
 }

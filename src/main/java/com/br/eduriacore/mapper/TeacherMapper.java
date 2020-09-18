@@ -15,6 +15,7 @@ public class TeacherMapper {
         dto.setEmail(entity.getEmail());
         dto.setPassword(entity.getPassword());
         dto.setPhone(entity.getPhone());
+        dto.setBirthDate(entity.getBirthDate());
         return dto;
     }
 
@@ -24,6 +25,7 @@ public class TeacherMapper {
         entity.setEmail(dto.getEmail());
         entity.setPassword(dto.getPassword());
         entity.setPhone(dto.getPhone());
+        entity.setBirthDate(dto.getBirthDate());
         return entity;
     }
 
