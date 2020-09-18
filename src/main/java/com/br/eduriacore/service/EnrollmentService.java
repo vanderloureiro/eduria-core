@@ -38,7 +38,11 @@ public class EnrollmentService {
         Enrollment enrollment = new Enrollment();
         enrollment.setCourse(course);
         enrollment.setStudent(student);
-        enrollment.setScore(0.0);
+        enrollment.setScore(0);
+        enrollment.setEasyQuestionsAnsweredCorrect(0);
+        enrollment.setMediumQuestionsAnsweredCorrect(0);
+        enrollment.setHardQuestionsAnsweredCorrect(0);
+        enrollment.setQttAllQuestionsAnswered(0);
 
         return this.mapper.toDto(this.repository.save(enrollment));
     }
