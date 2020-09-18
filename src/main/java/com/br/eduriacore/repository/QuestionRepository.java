@@ -13,4 +13,7 @@ public interface QuestionRepository extends JpaRepository<Question, Long>{
     @Query("SELECT q FROM Question q WHERE q.questionLevel = ?1 AND q.course.courseId = ?2")
     List<Question> findAllByLevelAndCourse(LevelQuestionEnum level, Long courseId);
 
+    @Query("SELECT COUNT (q) FROM Question q WHERE q.course.courseId = ?1")
+    Integer countByCourse(Long courseId);
+
 }

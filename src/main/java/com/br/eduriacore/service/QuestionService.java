@@ -46,6 +46,10 @@ public class QuestionService {
         });
     }
 
+    public Integer countByCourse(Long courseId) {
+        return this.repository.countByCourse(courseId);
+    }
+
     public QuestionDto update(QuestionDto questionDto, Long id) {
         Course course = this.courseService.getEntityById(questionDto.getCourseId());
         Optional<Question> question = this.repository.findById(id);
