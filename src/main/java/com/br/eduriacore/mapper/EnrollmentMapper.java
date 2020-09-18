@@ -15,8 +15,6 @@ public class EnrollmentMapper {
         dto.setEnrollmentId(entity.getEnrollmentId());
         dto.setCourseId(entity.getCourse().getCourseId());
         dto.setStudentId(entity.getStudent().getId());
-        dto.setQtableId(entity.getQtable().getQTableId());
-        dto.setState(entity.getState());
         dto.setScore(entity.getScore());
         return dto;
     }
@@ -31,7 +29,6 @@ public class EnrollmentMapper {
 
         entity.setCourse(course);
         entity.setStudent(student);
-        entity.setState(dto.getState());
         return entity;
     }
 }

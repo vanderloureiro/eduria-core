@@ -9,7 +9,6 @@ import com.br.eduriacore.mapper.EnrollmentMapper;
 import com.br.eduriacore.model.Course;
 import com.br.eduriacore.model.Enrollment;
 import com.br.eduriacore.model.Student;
-import com.br.eduriacore.model.enums.StateEnum;
 import com.br.eduriacore.repository.EnrollmentRepository;
 
 import org.springframework.data.domain.Page;
@@ -23,15 +22,13 @@ public class EnrollmentService {
     private EnrollmentMapper mapper;
     private StudentService studentService;
     private CourseService courseService;
-    private QtableService qtableService;
 
     public EnrollmentService(EnrollmentRepository repository, StudentService studentService, EnrollmentMapper mapper,
-            CourseService courseService, QtableService qtableService) {
+            CourseService courseService) {
         this.repository = repository;
         this.studentService = studentService;
         this.mapper = mapper;
         this.courseService = courseService;
-        this.qtableService = qtableService;
     }
 
     public EnrollmentDto create(EnrollmentForm form) {
@@ -39,12 +36,9 @@ public class EnrollmentService {
         Student student = this.studentService.getEntityById(form.getStudentId());
 
         Enrollment enrollment = new Enrollment();
-
         enrollment.setCourse(course);
         enrollment.setStudent(student);
         enrollment.setScore(0.0);
-        enrollment.setState(StateEnum.BEGINNER);
-        enrollment.setQtable(this.qtableService.createDefaultQtable(20));
 
         return this.mapper.toDto(this.repository.save(enrollment));
     }
