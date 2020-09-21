@@ -46,17 +46,64 @@ public class EvaluatorService {
 
         Question question     = this.questionService.getEntityById(answerForm.getQuestionId());
         Enrollment enrollment = this.enrollmentService.getEntityById(answerForm.getEnrollmentId());
+        Integer qttAllCourseQuestions = this.questionService.countByCourse(enrollment.getCourse().getCourseId());
+
         ResponseResultDto result = new ResponseResultDto();
 
         result.setEnrollmentId(enrollment.getEnrollmentId());
         result.setQuestionId(question.getQuestionId());
         result.setCorrectAlternative(question.getCorrectAlternativeToString());
 
+        if (question.getCorrectAlternative() == answerForm.getSelectedAlternative()) {
+            enrollment = this.registerCurrectAnswer(enrollment, question);
+            result.setCorrectResponse(true);
+        } else {
+            enrollment = this.registerWrongAnswer(enrollment, question);
+            result.setCorrectResponse(false);
+        }
 
-        this.enrollmentService.updateEnrollment(enrollment);
+        result.setScore(this.integrationService.calculateScore(enrollment, qttAllCourseQuestions));
 
-        return null;
+        return result;
     }
 
+    private Enrollment registerCurrectAnswer(Enrollment enrollment, Question question) {
+        enrollment.setLastQuestionWasAnsweredCorrect(true);
+        enrollment.setLastQuestionLevel(question.getQuestionLevel());
+
+        if (question.getQuestionLevel() == LevelQuestionEnum.EASY){
+            enrollment.setEasyQuestionsAnsweredCorrect(
+                enrollment.getEasyQuestionsAnsweredCorrect() + 1
+            );
+        }
+        if (question.getQuestionLevel() == LevelQuestionEnum.MEDIUM) {
+            enrollment.setMediumQuestionsAnsweredCorrect(
+                enrollment.getMediumQuestionsAnsweredCorrect() + 1
+            );
+        }
+        if (question.getQuestionLevel() == LevelQuestionEnum.HARD) {
+            enrollment.setHardQuestionsAnsweredCorrect(
+                enrollment.getHardQuestionsAnsweredCorrect() + 1
+            );
+        }
+        enrollment.setQttAllQuestionsAnswered(
+            enrollment.getQttAllQuestionsAnswered() + 1
+        );
+
+        this.enrollmentService.updateEnrollment(enrollment);
+        return enrollment;
+    }
+
+    private Enrollment registerWrongAnswer(Enrollment enrollment, Question question) {
+        enrollment.setLastQuestionWasAnsweredCorrect(false);
+        enrollment.setLastQuestionLevel(question.getQuestionLevel());
+
+        enrollment.setQttAllQuestionsAnswered(
+            enrollment.getQttAllQuestionsAnswered() + 1
+        );
+        
+        this.enrollmentService.updateEnrollment(enrollment);
+        return enrollment;
+    }
 
 }

@@ -47,7 +47,7 @@ public class IntegrationService {
         return request;
     }
     
-    private Integer calculateScore(Enrollment enrollment, Integer qttAllCourseQuestions) {
+    public Integer calculateScore(Enrollment enrollment, Integer qttAllCourseQuestions) {
 
         Integer qqAllAnswedQuestions = enrollment.getEasyQuestionsAnsweredCorrect() +
         enrollment.getMediumQuestionsAnsweredCorrect() + enrollment.getHardQuestionsAnsweredCorrect();

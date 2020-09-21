@@ -32,7 +32,6 @@ public class CourseService {
         courseToSave.setCourseName(courseDto.getCourseName());
         courseToSave.setTeacher(teacher);
         courseToSave.setIntegrationUri(courseDto.getIntegrationUri());
-        courseToSave.setIntegrationPort(courseDto.getIntegrationPort());
         courseToSave.setIntegrationName(courseDto.getIntegrationName());
         return this.mapper.toDto(this.repository.save(courseToSave));
     }
@@ -64,7 +63,6 @@ public class CourseService {
         courseToSave.setTeacher(teacher);
         courseToSave.setCourseId(id);
         courseToSave.setIntegrationUri(courseDto.getIntegrationUri());
-        courseToSave.setIntegrationPort(courseDto.getIntegrationPort());
         courseToSave.setIntegrationName(courseDto.getIntegrationName());
         return this.mapper.toDto(this.repository.save(courseToSave));
     }
