@@ -1,12 +1,14 @@
 package com.br.eduriacore.model;
 
-import com.br.eduriacore.model.enums.IntelligenceLevelEnum;
+import java.util.UUID;
+
+import com.br.eduriacore.model.enums.LevelQuestionEnum;
 
 import lombok.Data;
 
 @Data
 public class IntelligenceResponse {
     
-    private Long registerId;
-    private IntelligenceLevelEnum selectedLevel;
+    private UUID registerUuid;
+    private LevelQuestionEnum selectedLevel;
 }

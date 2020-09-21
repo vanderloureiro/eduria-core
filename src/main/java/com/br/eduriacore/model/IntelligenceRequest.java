@@ -1,13 +1,15 @@
 package com.br.eduriacore.model;
 
-import com.br.eduriacore.model.enums.IntelligenceLevelEnum;
+import java.util.UUID;
+
+import com.br.eduriacore.model.enums.LevelQuestionEnum;
 
 import lombok.Data;
 
 @Data
 public class IntelligenceRequest {
     
-    private Long registerId;
+    private UUID registerUuid;
     private Long studentId;
     private Integer studentAge;
     private String courseName;
@@ -16,6 +18,7 @@ public class IntelligenceRequest {
     private Integer hardQuestionsAnsweredCorrect;
     private Integer qttAllQuestionsAnswered;
     private Integer qttAllCourseQuestions;
-    private IntelligenceLevelEnum lastQuestionLevel;
+    private Integer score;
+    private LevelQuestionEnum lastQuestionLevel;
     private boolean lastQuestionWasAnsweredCorrect;
 }
