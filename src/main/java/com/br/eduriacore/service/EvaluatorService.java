@@ -1,6 +1,5 @@
 package com.br.eduriacore.service;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Random;
 
@@ -21,17 +20,19 @@ public class EvaluatorService {
     private EvaluatorMapper evaluatorMapper;
     private QuestionService questionService;
     private EnrollmentService enrollmentService;
+    private IntegrationService integrationService;
 
     public EvaluatorService(EvaluatorMapper evaluatorMapper, EnrollmentService enrollmentService,
-        QuestionService questionService) {
-        this.evaluatorMapper   = evaluatorMapper;
-        this.enrollmentService = enrollmentService;
-        this.questionService   = questionService;
+            QuestionService questionService, IntegrationService integrationService) {
+        this.evaluatorMapper    = evaluatorMapper;
+        this.enrollmentService  = enrollmentService;
+        this.questionService    = questionService;
+        this.integrationService = integrationService;
     }
 
     public QuestionPresentedDto presentNewQuestion(Long enrollmentId) {
         Enrollment enrollment   = this.enrollmentService.getEntityById(enrollmentId);
-        LevelQuestionEnum level = this.getLevelQuestion(enrollment);
+        LevelQuestionEnum level = this.integrationService.getLevelQuestion(enrollment);
 
         List<QuestionDto> questions = this.questionService.getQuestionByLevelAndCourse(level, enrollment.getCourse().getCourseId());
 
@@ -51,27 +52,10 @@ public class EvaluatorService {
         result.setQuestionId(question.getQuestionId());
         result.setCorrectAlternative(question.getCorrectAlternativeToString());
 
-        
+
         this.enrollmentService.updateEnrollment(enrollment);
 
         return null;
-    }
-
-    private LevelQuestionEnum getLevelQuestion(Enrollment enrollment) {
-        this.calculateAge(enrollment.getStudent().getBirthDate());
-        return null;
-    }
-
-    private Integer calculateScore(Enrollment enrollment, Integer qttAllCourseQuestions) {
-
-        Integer qqAllAnswedQuestions = enrollment.getEasyQuestionsAnsweredCorrect() +
-        enrollment.getMediumQuestionsAnsweredCorrect() + enrollment.getHardQuestionsAnsweredCorrect();
-
-        return (qqAllAnswedQuestions * 100) / qttAllCourseQuestions;
-    }
-
-    private Integer calculateAge(LocalDate birthDate) {
-        return LocalDate.now().getYear() - birthDate.getYear();
     }
 
 

@@ -25,6 +25,15 @@ public class Course {
     @Column(name="course_id")
     private Long courseId;
 
+    @Column(name="course_id", nullable = false)
+    private String integrationUri;
+
+    @Column(name="course_id", nullable = false)
+    private Integer integrationPort;
+
+    @Column(name="integration_name", nullable = false)
+    private String integrationName;
+
     @ManyToOne
     @JoinColumn(name = "teacher_id", nullable = false)
     private Teacher teacher;
