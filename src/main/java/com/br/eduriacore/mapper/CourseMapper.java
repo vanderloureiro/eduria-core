@@ -13,6 +13,9 @@ public class CourseMapper {
         dto.setCourseId(entity.getCourseId());
         dto.setCourseName(entity.getCourseName());
         dto.setTeacherId(entity.getTeacher().getId());
+        dto.setIntegrationUri(entity.getIntegrationUri());
+        dto.setIntegrationPort(entity.getIntegrationPort());
+        dto.setIntegrationName(entity.getIntegrationName());
         return dto;
     }
     
