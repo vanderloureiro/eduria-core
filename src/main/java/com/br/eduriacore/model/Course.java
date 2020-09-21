@@ -25,7 +25,7 @@ public class Course {
     @Column(name="course_id")
     private Long courseId;
 
-    @Column(name="course_id", nullable = false)
+    @Column(name="integration_uri", nullable = false)
     private String integrationUri;
 
     @Column(name="integration_name", nullable = false)

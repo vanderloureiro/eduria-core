@@ -20,5 +20,5 @@ public class IntelligenceRequest {
     private Integer qttAllCourseQuestions;
     private Integer score;
     private LevelQuestionEnum lastQuestionLevel;
-    private boolean lastQuestionWasAnsweredCorrect;
+    private Boolean lastQuestionWasAnsweredCorrect;
 }
