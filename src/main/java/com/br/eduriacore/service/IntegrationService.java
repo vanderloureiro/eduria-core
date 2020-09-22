@@ -7,9 +7,13 @@ import java.util.UUID;
 
 import com.br.eduriacore.model.Enrollment;
 import com.br.eduriacore.model.IntelligenceRequest;
+import com.br.eduriacore.model.IntelligenceResponse;
 import com.br.eduriacore.model.enums.LevelQuestionEnum;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 @Service
 public class IntegrationService {
@@ -22,7 +26,26 @@ public class IntegrationService {
 
     public LevelQuestionEnum getLevelQuestion(Enrollment enrollment) {
         IntelligenceRequest request = this.createObjectRequest(enrollment);
+        
         System.out.println(request.toString());
+
+        RestTemplate restTemplate = new RestTemplate();
+        String uri = enrollment.getCourse().getIntegrationUri();
+
+        try {            
+            ResponseEntity<IntelligenceResponse> response = restTemplate.postForEntity(uri, request, IntelligenceResponse.class);
+    
+            if (response.getStatusCode() == HttpStatus.OK) {
+                return response.getBody().getSelectedLevel();  
+            } else {
+                return this.generateRandomLevel();
+            }
+        } catch (Exception e) {
+            return this.generateRandomLevel();
+        }
+    }
+
+    private LevelQuestionEnum generateRandomLevel() {
         int index = new Random().nextInt(3);
         return Arrays.asList(LevelQuestionEnum.values()).get(index);
     }
