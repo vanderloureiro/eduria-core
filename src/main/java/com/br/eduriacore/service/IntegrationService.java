@@ -36,6 +36,7 @@ public class IntegrationService {
             ResponseEntity<IntelligenceResponse> response = restTemplate.postForEntity(uri, request, IntelligenceResponse.class);
     
             if (response.getStatusCode() == HttpStatus.OK) {
+                System.out.println("Response: " + response.getBody().getSelectedLevel());
                 return response.getBody().getSelectedLevel();  
             } else {
                 return this.generateRandomLevel();
