@@ -27,7 +27,7 @@ public class IntegrationService {
     public LevelQuestionEnum getLevelQuestion(Enrollment enrollment) {
         IntelligenceRequest request = this.createObjectRequest(enrollment);
         
-        System.out.println(request.toString());
+        System.out.println(request.toLatexRowTable());
 
         RestTemplate restTemplate = new RestTemplate();
         String uri = enrollment.getCourse().getIntegrationUri();
@@ -36,7 +36,6 @@ public class IntegrationService {
             ResponseEntity<IntelligenceResponse> response = restTemplate.postForEntity(uri, request, IntelligenceResponse.class);
     
             if (response.getStatusCode() == HttpStatus.OK) {
-                System.out.println("Response: " + response.getBody().getSelectedLevel());
                 return response.getBody().getSelectedLevel();  
             } else {
                 return this.generateRandomLevel();
@@ -62,28 +61,15 @@ public class IntegrationService {
         request.setEasyQuestionsAnsweredCorrect(enrollment.getEasyQuestionsAnsweredCorrect());
         request.setMediumQuestionsAnsweredCorrect(enrollment.getMediumQuestionsAnsweredCorrect());
         request.setHardQuestionsAnsweredCorrect(enrollment.getHardQuestionsAnsweredCorrect());
-        request.setQttAllQuestionsAnswered(this.countAnsweredQuestions(enrollment));
+        request.setQttAllQuestionsAnswered(enrollment.getQttAllQuestionsAnswered());
         request.setQttAllCourseQuestions(qttAllCourseQuestions);
-        request.setScore(this.calculateScore(enrollment, qttAllCourseQuestions));
+        request.setScore(enrollment.getScore());
         request.setLastQuestionLevel(enrollment.getLastQuestionLevel());
         request.setLastQuestionWasAnsweredCorrect(enrollment.getLastQuestionWasAnsweredCorrect());
 
         return request;
     }
     
-    public Integer calculateScore(Enrollment enrollment, Integer qttAllCourseQuestions) {
-
-        Integer qqAllAnswedQuestions = enrollment.getEasyQuestionsAnsweredCorrect() +
-        enrollment.getMediumQuestionsAnsweredCorrect() + enrollment.getHardQuestionsAnsweredCorrect();
-
-        return (qqAllAnswedQuestions * 100) / qttAllCourseQuestions;
-    }
-
-    private Integer countAnsweredQuestions(Enrollment enrollment) {
-        return enrollment.getEasyQuestionsAnsweredCorrect() + enrollment.getMediumQuestionsAnsweredCorrect()
-             + enrollment.getHardQuestionsAnsweredCorrect();
-    }
-
     private Integer calculateAge(LocalDate birthDate) {
         return LocalDate.now().getYear() - birthDate.getYear();
     }

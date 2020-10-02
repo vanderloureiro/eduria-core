@@ -21,4 +21,20 @@ public class IntelligenceRequest {
     private Integer score;
     private LevelQuestionEnum lastQuestionLevel;
     private Boolean lastQuestionWasAnsweredCorrect;
+
+    public String toLatexRowTable() {
+        String formatedText = " & " + this.studentId;
+        formatedText += " & " + this.studentAge;
+        formatedText += " & " + this.courseName;
+        formatedText += " & " + this.easyQuestionsAnsweredCorrect;
+        formatedText += " & " + this.mediumQuestionsAnsweredCorrect;
+        formatedText += " & " + this.hardQuestionsAnsweredCorrect;
+        formatedText += " & " + this.qttAllQuestionsAnswered;
+        formatedText += " & " + this.qttAllCourseQuestions;
+        formatedText += " & " + this.score;
+        formatedText += " & " + this.lastQuestionLevel;
+        formatedText += " & " + this.lastQuestionWasAnsweredCorrect;
+
+        return formatedText + "\\";
+    }
 }

@@ -46,8 +46,7 @@ public class EvaluatorService {
 
         Question question     = this.questionService.getEntityById(answerForm.getQuestionId());
         Enrollment enrollment = this.enrollmentService.getEntityById(answerForm.getEnrollmentId());
-        Integer qttAllCourseQuestions = this.questionService.countByCourse(enrollment.getCourse().getCourseId());
-
+        
         ResponseResultDto result = new ResponseResultDto();
 
         result.setEnrollmentId(enrollment.getEnrollmentId());
@@ -62,7 +61,7 @@ public class EvaluatorService {
             result.setCorrectResponse(false);
         }
 
-        result.setScore(this.integrationService.calculateScore(enrollment, qttAllCourseQuestions));
+        result.setScore(enrollment.getScore());
 
         return result;
     }
@@ -70,6 +69,7 @@ public class EvaluatorService {
     private Enrollment registerCurrectAnswer(Enrollment enrollment, Question question) {
         enrollment.setLastQuestionWasAnsweredCorrect(true);
         enrollment.setLastQuestionLevel(question.getQuestionLevel());
+        enrollment.setScore(this.calculateScore(enrollment, true));
 
         if (question.getQuestionLevel() == LevelQuestionEnum.EASY){
             enrollment.setEasyQuestionsAnsweredCorrect(
@@ -97,13 +97,28 @@ public class EvaluatorService {
     private Enrollment registerWrongAnswer(Enrollment enrollment, Question question) {
         enrollment.setLastQuestionWasAnsweredCorrect(false);
         enrollment.setLastQuestionLevel(question.getQuestionLevel());
-
+        enrollment.setScore(this.calculateScore(enrollment, false));
+        
         enrollment.setQttAllQuestionsAnswered(
             enrollment.getQttAllQuestionsAnswered() + 1
         );
         
         this.enrollmentService.updateEnrollment(enrollment);
         return enrollment;
+    }
+
+    public Integer calculateScore(Enrollment enrollment, Boolean answerIsCurrect) {
+        Integer qttAllCourseQuestions = this.questionService.countByCourse(enrollment.getCourse().getCourseId());
+
+        Integer basicScore = 100 / qttAllCourseQuestions;
+
+        if (answerIsCurrect) {
+            return enrollment.getScore() + basicScore;
+        } 
+        if (!answerIsCurrect && enrollment.getScore() >= basicScore) {
+            return enrollment.getScore() - basicScore;
+        }
+        return enrollment.getScore();
     }
 
 }
