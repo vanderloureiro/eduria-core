@@ -10,6 +10,7 @@ import com.br.eduriacore.repository.StudentRepository;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,10 +18,12 @@ public class StudentService {
 
     private StudentRepository repository;
     private StudentMapper mapper;
+    private PasswordEncoder passwordEncoder;
 
-    public StudentService(StudentRepository repository, StudentMapper mapper) {
+    public StudentService(StudentRepository repository, StudentMapper mapper, PasswordEncoder passwordEncoder) {
         this.repository = repository;
         this.mapper = mapper;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public StudentDto getById(Long id) {
@@ -29,6 +32,9 @@ public class StudentService {
 
     public StudentDto create(StudentDto studentDto) {
         Student studentToSave = this.mapper.toEntityWithoutId(studentDto);
+        studentToSave.setPassword(
+            passwordEncoder.encode(studentToSave.getPassword())
+        );
         Student returnStudent = this.repository.save(studentToSave);
         return this.mapper.toDto(returnStudent);
     }
@@ -37,6 +43,9 @@ public class StudentService {
         Student student = this.getEntityById(id);
         Student entity  = this.mapper.toEntityWithoutId(studentDto);
         entity.setId(student.getId());
+        entity.setPassword(
+            passwordEncoder.encode(entity.getPassword())
+        );
         return this.mapper.toDto(this.repository.save(entity));
     }
 

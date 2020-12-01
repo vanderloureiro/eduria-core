@@ -28,7 +28,7 @@ public abstract class Person {
     @Column(nullable = false, length = 40, unique = true)
     protected String email;
 
-    @Column(nullable = false, length = 40)
+    @Column(nullable = false)
     protected String password;
 
     @Column(length = 40)

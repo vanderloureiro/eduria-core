@@ -10,6 +10,7 @@ import com.br.eduriacore.repository.TeacherRepository;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,14 +18,19 @@ public class TeacherService {
 
     private TeacherRepository repository;
     private TeacherMapper mapper;
+    private PasswordEncoder passwordEncoder;
 
-    public TeacherService(TeacherRepository repository, TeacherMapper mapper) {
+    public TeacherService(TeacherRepository repository, TeacherMapper mapper, PasswordEncoder passwordEncoder) {
         this.repository = repository;
-        this.mapper     = mapper;
+        this.mapper = mapper;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public TeacherDto create(TeacherDto teacherDto) {
         Teacher entityToSave = this.mapper.toEntityWithoutId(teacherDto);
+        entityToSave.setPassword(
+            passwordEncoder.encode(entityToSave.getPassword())
+        );
         return this.mapper.toDto(this.repository.save(entityToSave));
     }
 
@@ -50,6 +56,9 @@ public class TeacherService {
         if (teacher.isPresent()) {
             Teacher teacherToUpdate = this.mapper.toEntityWithoutId(teacherDto);
             teacherToUpdate.setId(teacher.get().getId());
+            teacherToUpdate.setPassword(
+                passwordEncoder.encode(teacherToUpdate.getPassword())
+            );
             return this.mapper.toDto(this.repository.save(teacherToUpdate));
         }
         throw new NotFoundException("Teacher not found");
