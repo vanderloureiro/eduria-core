@@ -1,13 +1,15 @@
 package com.br.eduriacore.security;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.br.eduriacore.model.Person;
+import com.br.eduriacore.model.Student;
+import com.br.eduriacore.model.Teacher;
 import com.br.eduriacore.repository.StudentRepository;
 import com.br.eduriacore.repository.TeacherRepository;
 
@@ -44,18 +46,26 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 
     private void tryAuthenticateWithTeacher(String token) {
         Long idPerson = tokenService.getPersonId(token);
-		Person person = this.teacherRepository.findById(idPerson).get();
+        Optional<Teacher> teacher = this.teacherRepository.findById(idPerson);
+        
+        if (teacher.isPresent()) {
+
+            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(teacher, null, null);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+        }
 		
-		UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(person, null, null);
-		SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
     private void tryAuthenticateWithStudent(String token) {
         Long idPerson = tokenService.getPersonId(token);
-		Person person = this.studentRepository.findById(idPerson).get();
-		
-		UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(person, null, null);
-		SecurityContextHolder.getContext().setAuthentication(authentication);
+
+		Optional<Student> student = this.studentRepository.findById(idPerson);
+        
+        if (student.isPresent()) {
+
+            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(student, null, null);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+        }
     }
     
     private String getToken(HttpServletRequest request) {

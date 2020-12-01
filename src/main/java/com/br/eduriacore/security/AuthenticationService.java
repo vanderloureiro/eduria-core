@@ -35,11 +35,11 @@ public class AuthenticationService implements UserDetailsService {
     public AuthenticationDto authenticate(AuthenticationForm form) {
         
         UsernamePasswordAuthenticationToken dadosLogin 
-            = new UsernamePasswordAuthenticationToken(form.getLogin(), form.getPassword());
+            = new UsernamePasswordAuthenticationToken(form.getEmail(), form.getPassword());
 
         try {
             this.authManager.authenticate(dadosLogin);
-            return this.createReturnObject(form.getLogin());
+            return this.createReturnObject(form.getEmail());
         } catch (Exception e) {
             throw new UnauthorizedException("Usuário não autorizado");
         }
